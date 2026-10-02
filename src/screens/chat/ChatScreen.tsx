@@ -19,6 +19,8 @@ import playIcon from './assets/play.svg'
 import paperclipIcon from './assets/paperclip.svg'
 import stickerIcon from './assets/sticker-icon.svg'
 import micIcon from './assets/mic.svg'
+import { StubSheet } from '../chat-list/StubSheet'
+import { showStub } from '../chat-list/stub'
 import styles from './ChatScreen.module.css'
 
 type Reaction = { emoji: string; avatar: string }
@@ -126,8 +128,8 @@ function Conversation({ id }: { id: string }) {
           </span>
         </ScreenLink>
         <div className={`${styles.actions} ${styles.glass}`}>
-          <button type="button" aria-label="Поиск по чату"><img src={searchIcon} alt="" width={24} height={24} /></button>
-          <button type="button" aria-label="Ещё"><img src={dotsIcon} alt="" width={24} height={24} /></button>
+          <button type="button" onClick={() => showStub()} aria-label="Поиск по чату"><img src={searchIcon} alt="" width={24} height={24} /></button>
+          <button type="button" onClick={() => showStub()} aria-label="Ещё"><img src={dotsIcon} alt="" width={24} height={24} /></button>
         </div>
       </header>
 
@@ -137,7 +139,7 @@ function Conversation({ id }: { id: string }) {
       </ol>
 
       <form className={styles.composer} onSubmit={send}>
-        <button type="button" className={`${styles.round} ${styles.glass}`} aria-label="Прикрепить">
+        <button type="button" onClick={() => showStub()} className={`${styles.round} ${styles.glass}`} aria-label="Прикрепить">
           <img src={paperclipIcon} alt="" width={24} height={24} />
         </button>
         <label className={`${styles.field} ${styles.glass}`}>
@@ -145,10 +147,11 @@ function Conversation({ id }: { id: string }) {
           <input value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Сообщение" enterKeyHint="send" />
           <img src={stickerIcon} alt="" width={20} height={20} />
         </label>
-        <button type="button" className={`${styles.round} ${styles.glass}`} aria-label="Записать голосовое">
+        <button type="button" onClick={() => showStub()} className={`${styles.round} ${styles.glass}`} aria-label="Записать голосовое">
           <img src={micIcon} alt="" width={24} height={24} />
         </button>
       </form>
+      <StubSheet />
     </section>
   )
 }
@@ -198,7 +201,7 @@ function Reactions({ reactions, dark }: { reactions: Reaction[]; dark?: boolean 
   return (
     <div className={styles.reactions}>
       {reactions.map((reaction) => (
-        <button key={reaction.emoji} type="button" className={`${styles.reaction} ${dark ? styles.reactionDark : ''}`}>
+        <button key={reaction.emoji} type="button" onClick={() => showStub()} className={`${styles.reaction} ${dark ? styles.reactionDark : ''}`}>
           <img src={reaction.emoji} alt="" width={24} height={24} />
           <img className={styles.reactionAvatar} src={reaction.avatar} alt="" width={24} height={24} />
         </button>
@@ -230,7 +233,7 @@ function ProductCard() {
           <img src={starIcon} alt="" width={16} height={16} />
           4,5 <span>· 24 оценки</span>
         </div>
-        <button type="button" className={styles.buy}>
+        <button type="button" onClick={() => showStub()} className={styles.buy}>
           <img src={cartIcon} alt="" width={16} height={16} />
           Послезавтра
         </button>
@@ -242,7 +245,7 @@ function ProductCard() {
 function Voice({ duration }: { duration: string }) {
   return (
     <div className={styles.voice}>
-      <button type="button" className={styles.play} aria-label="Воспроизвести">
+      <button type="button" onClick={() => showStub()} className={styles.play} aria-label="Воспроизвести">
         <img src={playIcon} alt="" width={45} height={45} />
       </button>
       <div className={styles.voiceInfo}>
@@ -251,7 +254,7 @@ function Voice({ duration }: { duration: string }) {
         </span>
         <span className={styles.voiceTime}>{duration}<i /></span>
       </div>
-      <button type="button" className={styles.transcribe} aria-label="Расшифровать">→A</button>
+      <button type="button" onClick={() => showStub()} className={styles.transcribe} aria-label="Расшифровать">→A</button>
     </div>
   )
 }

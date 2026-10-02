@@ -6,6 +6,7 @@ import { Avatar } from './Avatar'
 import { calls, contacts, me, type Call } from './chats'
 import callsIcon from './assets/calls.svg'
 import meFull from './assets/me.jpg'
+import { showStub } from './stub'
 import styles from './ChatListScreen.module.css'
 
 function Header({ title, children }: { title: string; children?: ReactNode }) {
@@ -51,10 +52,10 @@ export function ContactsTab() {
   return (
     <>
       <Header title="Контакты">
-        <button type="button" className={styles.iconButton} aria-label="Добавить контакт"><PlusIcon /></button>
+        <button type="button" onClick={() => showStub()} className={styles.iconButton} aria-label="Добавить контакт"><PlusIcon /></button>
       </Header>
       <div className={styles.list}>
-        <button type="button" className={`${styles.compactRow} ${styles.action}`}>
+        <button type="button" onClick={() => showStub()} className={`${styles.compactRow} ${styles.action}`}>
           <span className={styles.actionIcon}><PlusIcon /></span>
           Пригласить друзей
         </button>
@@ -88,7 +89,7 @@ export function CallsTab() {
       <header className={styles.header}>
         <div className={styles.titleRow}>
           <h1 className={`${styles.title} ${styles.grow}`}>Звонки</h1>
-          <button type="button" className={styles.iconButton} aria-label="Новый звонок"><PlusIcon /></button>
+          <button type="button" onClick={() => showStub()} className={styles.iconButton} aria-label="Новый звонок"><PlusIcon /></button>
         </div>
         <div className={`${styles.folders} ${styles.glass}`} role="group" aria-label="Фильтр звонков">
           <button type="button" className={styles.folder} aria-pressed={!missedOnly} onClick={() => setMissedOnly(false)}>Все</button>
@@ -131,7 +132,7 @@ export function ProfileTab() {
   return (
     <>
       <Header title="Профиль">
-        <button type="button" className={styles.textButton}>Изменить</button>
+        <button type="button" onClick={() => showStub()} className={styles.textButton}>Изменить</button>
       </Header>
       <div className={`${styles.list} ${styles.profile}`}>
         <Avatar person={{ name: me.name, avatar: meFull, stories: 1 }} />
@@ -140,14 +141,14 @@ export function ProfileTab() {
         <p className={styles.about}>{me.about}</p>
         <div className={styles.profileActions}>
           {['Фото', 'История', 'QR-код'].map((label) => (
-            <button key={label} type="button" className={`${styles.pill} ${styles.glass}`}>{label}</button>
+            <button key={label} type="button" onClick={() => showStub()} className={`${styles.pill} ${styles.glass}`}>{label}</button>
           ))}
         </div>
         {settings.map((group, i) => (
           <ul key={i} className={styles.card}>
             {group.map(([label, value]) => (
               <li key={label}>
-                <button type="button" className={styles.cardRow}>
+                <button type="button" onClick={() => showStub()} className={styles.cardRow}>
                   <span>{label}</span>
                   <span className={styles.cardValue}>{value} ›</span>
                 </button>

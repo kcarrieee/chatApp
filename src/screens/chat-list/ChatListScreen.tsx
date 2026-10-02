@@ -17,6 +17,8 @@ import callsIcon from './assets/calls.svg'
 import chatsIcon from './assets/chats.svg'
 import searchIcon from './assets/search.svg'
 import me from './assets/me.jpg'
+import { StubSheet } from './StubSheet'
+import { showStub } from './stub'
 import styles from './ChatListScreen.module.css'
 
 type Tab = 'contacts' | 'calls' | 'chats' | 'profile'
@@ -50,6 +52,7 @@ export function ChatListScreen() {
     return (
       <section className={styles.screen} aria-label="Истории">
         <StoryViewer users={viewing.users} start={viewing.start} onSeen={markSeen} onClose={() => setViewing(null)} />
+        <StubSheet />
       </section>
     )
   }
@@ -58,6 +61,7 @@ export function ChatListScreen() {
     return (
       <section className={styles.screen} aria-label="Поиск">
         <Search onClose={() => setSearching(false)} />
+        <StubSheet />
       </section>
     )
   }
@@ -91,6 +95,7 @@ export function ChatListScreen() {
           <img src={searchIcon} alt="" width={24} height={24} />
         </button>
       </nav>
+      <StubSheet />
     </section>
   )
 }
@@ -124,10 +129,10 @@ function ChatsTab({ storiesOpen, onStoriesOpen, seen, onOpenStory }: {
             aria-label="Показать истории" aria-expanded={storiesOpen} onClick={() => onStoriesOpen(true)}>
             <img src={stories} alt="" width={60} height={32} />
           </button>
-          <button type="button" className={styles.iconButton} aria-label="Новый чат">
+          <button type="button" onClick={() => showStub()} className={styles.iconButton} aria-label="Новый чат">
             <img src={editIcon} alt="" width={24} height={24} />
           </button>
-          <button type="button" className={styles.iconButton} aria-label="Ещё">
+          <button type="button" onClick={() => showStub()} className={styles.iconButton} aria-label="Ещё">
             <img src={dotsIcon} alt="" width={24} height={24} />
           </button>
         </div>
