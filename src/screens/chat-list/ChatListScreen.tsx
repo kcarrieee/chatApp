@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
-import { chats, folders, initials, type Chat, type FolderId } from './chats'
+import { chats, folders, type Chat, type FolderId } from './chats'
+import { Avatar } from './Avatar'
+import { CallsTab, ContactsTab, ProfileTab } from './tabs'
 import stories from './assets/stories.png'
 import editIcon from './assets/edit.svg'
 import dotsIcon from './assets/dots.svg'
@@ -12,15 +14,62 @@ import contactsIcon from './assets/contacts.svg'
 import callsIcon from './assets/calls.svg'
 import chatsIcon from './assets/chats.svg'
 import searchIcon from './assets/search.svg'
-import me from './assets/me.png'
+import me from './assets/me.jpg'
 import styles from './ChatListScreen.module.css'
 
+type Tab = 'contacts' | 'calls' | 'chats' | 'profile'
+
+const tabs: { id: Tab; label: string; icon: string }[] = [
+  { id: 'contacts', label: 'Контакты', icon: contactsIcon },
+  { id: 'calls', label: 'Звонки', icon: callsIcon },
+  { id: 'chats', label: 'Чаты', icon: chatsIcon },
+]
+
 export function ChatListScreen() {
+  const [tab, setTab] = useState<Tab>('chats')
+
+  function open(next: Tab, screen: HTMLElement | null) {
+    setTab(next)
+    screen?.parentElement?.scrollTo({ top: 0 })
+  }
+
+  return (
+    <section className={styles.screen} aria-label={tabs.find((item) => item.id === tab)?.label ?? 'Профиль'}>
+      {tab === 'chats' && <ChatsTab />}
+      {tab === 'contacts' && <ContactsTab />}
+      {tab === 'calls' && <CallsTab />}
+      {tab === 'profile' && <ProfileTab />}
+
+      <nav className={styles.tabBar} aria-label="Разделы">
+        <div className={`${styles.tabs} ${styles.glass}`}>
+          {tabs.map((item) => (
+            <button key={item.id} type="button" className={styles.tab} aria-label={item.label}
+              aria-current={tab === item.id ? 'page' : undefined}
+              onClick={(event) => open(item.id, event.currentTarget.closest('section'))}>
+              <span className={styles.tabIcon} style={{ '--icon': `url("${item.icon}")` } as CSSProperties} />
+            </button>
+          ))}
+          <button type="button" className={styles.tab} aria-label="Мой профиль"
+            aria-current={tab === 'profile' ? 'page' : undefined}
+            onClick={(event) => open('profile', event.currentTarget.closest('section'))}>
+            <img className={styles.me} src={me} alt="" width={28} height={28} />
+          </button>
+        </div>
+        {/* Search gets its own screen from separate mockups. */}
+        <button type="button" className={`${styles.search} ${styles.glass}`} aria-label="Поиск">
+          <img src={searchIcon} alt="" width={24} height={24} />
+        </button>
+      </nav>
+    </section>
+  )
+}
+
+function ChatsTab() {
   const [folder, setFolder] = useState<FolderId>('all')
   const visible = folder === 'all' ? chats : chats.filter((chat) => chat.folder === folder)
 
   return (
-    <section className={styles.screen} aria-label="Список чатов">
+    <>
       <header className={styles.header}>
         <div className={styles.titleRow}>
           <h1 className={styles.title}>Чаты</h1>
@@ -51,34 +100,14 @@ export function ChatListScreen() {
       <ul className={styles.list}>
         {visible.map((chat) => <li key={chat.id}><ChatRow chat={chat} /></li>)}
       </ul>
-
-      <nav className={styles.tabBar} aria-label="Разделы">
-        <div className={`${styles.tabs} ${styles.glass}`}>
-          <button type="button" className={styles.tab} aria-label="Контакты">
-            <img src={contactsIcon} alt="" width={24} height={24} />
-          </button>
-          <button type="button" className={styles.tab} aria-label="Звонки">
-            <img src={callsIcon} alt="" width={24} height={24} />
-          </button>
-          <button type="button" className={styles.tab} aria-label="Чаты" aria-current="page">
-            <img src={chatsIcon} alt="" width={24} height={24} />
-          </button>
-          <button type="button" className={styles.tab} aria-label="Мой профиль">
-            <img className={styles.me} src={me} alt="" width={28} height={28} />
-          </button>
-        </div>
-        <button type="button" className={`${styles.search} ${styles.glass}`} aria-label="Поиск">
-          <img src={searchIcon} alt="" width={24} height={24} />
-        </button>
-      </nav>
-    </section>
+    </>
   )
 }
 
 function ChatRow({ chat }: { chat: Chat }) {
   return (
     <ScreenLink to={routes.chat} className={styles.row}>
-      <Avatar chat={chat} />
+      <Avatar person={chat} />
       <div className={styles.content}>
         <div className={styles.main}>
           <div className={styles.name}>
@@ -101,26 +130,5 @@ function ChatRow({ chat }: { chat: Chat }) {
         </div>
       </div>
     </ScreenLink>
-  )
-}
-
-const RING_LENGTH = 2 * Math.PI * 30
-
-function Avatar({ chat }: { chat: Chat }) {
-  const stories = chat.stories ?? 0
-  // Several stories split the ring into segments with small round-capped gaps.
-  const dash = stories > 1 ? `${RING_LENGTH / stories - 6} 6` : undefined
-
-  return (
-    <span className={`${styles.avatar} ${stories ? styles.withStory : ''}`}>
-      {chat.avatar
-        ? <img className={styles.photo} src={chat.avatar} alt="" />
-        : <span className={styles.photo} style={{ background: chat.color }}>{initials(chat.name)}</span>}
-      {stories > 0 && (
-        <svg className={styles.ring} viewBox="0 0 62 62" aria-label="Есть истории">
-          <circle cx="31" cy="31" r="30" strokeDasharray={dash} />
-        </svg>
-      )}
-    </span>
   )
 }

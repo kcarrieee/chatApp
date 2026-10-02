@@ -160,6 +160,9 @@
   color: #fff;
   font: 600 24px/1 var(--sans);
 }
+.avatar.small { width: 44px; height: 44px; margin: 0 12px 0 0; }
+.small .photo { font-size: 17px; }
+.small.withStory .photo { inset: 3px; width: calc(100% - 6px); height: calc(100% - 6px); }
 .withStory .photo { inset: 4px; width: calc(100% - 8px); height: calc(100% - 8px); }
 .ring {
   position: absolute;
@@ -253,7 +256,11 @@
   z-index: 2;
   display: flex;
   gap: 8px;
-  padding: 16px 25px 0;
+  /* Room for the home indicator, as in Figma. */
+  padding: 16px 25px 32px;
+}
+@media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
+  .tabBar { padding: 16px 16px 8px; justify-content: center; }
 }
 .tabBar::before {
   content: '';
@@ -266,12 +273,15 @@
   mask-image: linear-gradient(transparent, #000 40%);
 }
 .tabs {
+  flex: 0 1 292px;
+  min-width: 0;
   height: 52px;
   display: flex;
   padding: 3px 4px;
 }
 .tab {
-  width: 80px;
+  flex: 1 1 80px;
+  min-width: 0;
   height: 46px;
   display: grid;
   place-items: center;
@@ -279,10 +289,136 @@
 }
 .tab + .tab { margin-left: -12px; }
 .tab[aria-current='page'] { background: #eee; }
-.me { border-radius: 50%; }
+/* Icon tinted through a mask, so the active tab turns purple. */
+.tabIcon {
+  width: 24px;
+  height: 24px;
+  background: var(--ink);
+  mask: var(--icon) center / contain no-repeat;
+}
+.tab[aria-current='page'] .tabIcon { background: linear-gradient(#9757e9, #ad6dff); }
+.me { border-radius: 50%; object-fit: cover; }
 .search {
+  flex: none;
   width: 52px;
   height: 52px;
   display: grid;
   place-items: center;
 }
+
+/* ---------- Contacts, calls, profile ---------- */
+
+.grow { flex: 1; }
+.textButton {
+  padding: 0 8px;
+  height: 36px;
+  font: 500 16px/20px var(--sans);
+  color: var(--accent);
+}
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.compactRow {
+  width: 100%;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+a.compactRow:hover, button.compactRow:hover { background: #f7f7f8; }
+.compactText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.status {
+  margin: 0;
+  font: 454 14px/18px var(--sans);
+  color: #808093;
+}
+.status.online { color: var(--accent); }
+.missed { color: #ff383c; }
+.letter {
+  margin: 12px 16px 2px;
+  font: 600 13px/18px var(--sans);
+  color: #808093;
+}
+.action { font: 550 17px/20px var(--sans); color: var(--accent); }
+.actionIcon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  margin-right: 12px;
+  border-radius: 50%;
+  background: #f3edfc;
+}
+
+.callBack {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  margin-left: 8px;
+  border-radius: 50%;
+  color: var(--accent);
+}
+.callBack:hover { background: #f3edfc; }
+.callBack img {
+  /* Tint the shared dark icon purple. */
+  filter: invert(42%) sepia(62%) saturate(2400%) hue-rotate(245deg) brightness(95%);
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 16px 24px;
+  text-align: center;
+}
+.profile .avatar { width: 112px; height: 112px; margin: 0 0 12px; }
+.profile .withStory .photo { inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); }
+.profileName { margin: 0 0 4px; font: 700 24px/28px var(--sans); }
+.about { margin: 10px 0 0; font: 454 15px/20px var(--sans); }
+.profileActions {
+  display: flex;
+  gap: 8px;
+  margin: 18px 0 8px;
+}
+.pill {
+  height: 40px;
+  padding: 0 18px;
+  font: 500 14px/20px var(--sans);
+}
+.card {
+  width: 100%;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  border-radius: 20px;
+  background: #f4f4f6;
+  overflow: hidden;
+}
+.card li + li { border-top: 1px solid #e6e6ea; }
+.cardRow {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  font: 454 16px/20px var(--sans);
+  text-align: left;
+}
+.cardRow:hover { background: #ececf0; }
+.cardValue { color: #808093; }

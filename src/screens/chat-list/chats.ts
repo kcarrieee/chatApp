@@ -57,3 +57,62 @@ export const chats: Chat[] = [
 export function initials(name: string) {
   return name.split(' ').slice(0, 2).map((word) => word[0]).join('').toUpperCase()
 }
+
+// ---------- Contacts, calls and own profile ----------
+
+export type Person = Pick<Chat, 'id' | 'name' | 'avatar' | 'color' | 'stories'> & { status: string }
+
+const byId = Object.fromEntries(chats.map((chat) => [chat.id, chat]))
+const fromChat = (id: string, status: string): Person => {
+  const { name, avatar, color, stories } = byId[id]
+  return { id, name, avatar, color, stories, status }
+}
+
+export const contacts: Person[] = [
+  fromChat('alisa', 'в сети'),
+  fromChat('viki', 'в сети'),
+  fromChat('elizaveta', 'была 5 минут назад'),
+  fromChat('andrey', 'был сегодня в 8:30'),
+  fromChat('liza', 'в сети'),
+  fromChat('katrin', 'была вчера в 23:10'),
+  fromChat(demoContact.id, demoContact.status.toLowerCase()),
+  fromChat('mama', 'была недавно'),
+  fromChat('sergey', 'был на этой неделе'),
+  { id: 'boris', name: 'Борис Иванов', color: '#34c759', status: 'был недавно' },
+  { id: 'galya', name: 'Галина Сергеевна', color: '#ff8d28', status: 'была в понедельник' },
+  { id: 'dima', name: 'Дима', color: '#6155f5', status: 'в сети' },
+  { id: 'nika', name: 'Ника', color: '#ff383c', status: 'была давно' },
+].sort((a, b) => a.name.localeCompare(b.name, 'ru'))
+
+export type Call = {
+  id: string
+  person: Person
+  kind: 'audio' | 'video'
+  direction: 'in' | 'out'
+  missed?: boolean
+  /** Several calls in a row are grouped into one line. */
+  count?: number
+  time: string
+}
+
+const person = (id: string) => contacts.find((contact) => contact.id === id)!
+
+export const calls: Call[] = [
+  { id: 'c1', person: person('alisa'), kind: 'video', direction: 'in', time: '9:30' },
+  { id: 'c2', person: person('andrey'), kind: 'audio', direction: 'in', missed: true, count: 2, time: '8:15' },
+  { id: 'c3', person: person(demoContact.id), kind: 'audio', direction: 'out', time: 'Вчера' },
+  { id: 'c4', person: person('mama'), kind: 'audio', direction: 'in', time: 'Вчера' },
+  { id: 'c5', person: person('elizaveta'), kind: 'video', direction: 'out', time: 'Вчера' },
+  { id: 'c6', person: person('dima'), kind: 'audio', direction: 'in', missed: true, time: 'Пн' },
+  { id: 'c7', person: person('katrin'), kind: 'audio', direction: 'out', count: 3, time: 'Пн' },
+  { id: 'c8', person: person('sergey'), kind: 'video', direction: 'in', time: 'Вс' },
+  { id: 'c9', person: person('viki'), kind: 'audio', direction: 'in', missed: true, time: '28.09' },
+  { id: 'c10', person: person('boris'), kind: 'audio', direction: 'out', time: '27.09' },
+]
+
+export const me = {
+  name: 'Даша Волкова',
+  username: '@dasha_volk',
+  phone: '+7 900 123-45-67',
+  about: 'Дизайнер. Люблю клубнику и длинные голосовые 🍓',
+}
