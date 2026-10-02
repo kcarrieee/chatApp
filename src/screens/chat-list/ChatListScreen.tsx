@@ -106,7 +106,7 @@ function ChatsTab() {
 
 function ChatRow({ chat }: { chat: Chat }) {
   return (
-    <ScreenLink to={routes.chat} className={styles.row}>
+    <ScreenLink to={routes.chat} id={chat.id} className={styles.row}>
       <Avatar person={chat} />
       <div className={styles.content}>
         <div className={styles.main}>

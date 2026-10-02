@@ -118,6 +118,15 @@
   display: block;
   border-radius: 50%;
 }
+.initials {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  font: 600 15px/1 var(--sans);
+}
 .contactText { min-width: 0; display: flex; flex-direction: column; }
 .contactName { font-size: 15px; line-height: 18px; font-weight: 590; }
 .contactStatus { font-size: 12px; line-height: 14px; font-weight: 590; color: rgb(255 255 255 / .45); }
@@ -200,6 +209,16 @@
   filter: invert(30%) sepia(90%) saturate(4000%) hue-rotate(262deg) brightness(100%);
 }
 
+.sender { font: 550 14px/18px var(--sans); color: var(--accent); }
+.empty {
+  align-self: center;
+  margin: auto 0;
+  padding: 8px 14px;
+  border-radius: 16px;
+  background: rgb(0 0 0 / .3);
+  color: #fff;
+  font: 400 15px/20px var(--sans);
+}
 .sticker { position: relative; }
 .sticker img { display: block; }
 .timeChip {

@@ -62,7 +62,7 @@ export function ContactsTab() {
           <section key={letter} aria-label={letter}>
             <h2 className={styles.letter}>{letter}</h2>
             {people.map((person) => (
-              <ScreenLink key={person.id} to={routes.chat} className={styles.compactRow}>
+              <ScreenLink key={person.id} to={routes.chat} id={person.id} className={styles.compactRow}>
                 <Avatar person={person} size="small" />
                 <span className={styles.compactText}>
                   <span className={styles.nameText}>{person.name}</span>
@@ -110,7 +110,7 @@ export function CallsTab() {
               </span>
             </span>
             <span className={styles.time}>{call.time}</span>
-            <ScreenLink to={call.kind === 'video' ? routes.videoCall : routes.audioCall} className={styles.callBack}>
+            <ScreenLink to={call.kind === 'video' ? routes.videoCall : routes.audioCall} id={call.person.id} className={styles.callBack}>
               {call.kind === 'video' ? <VideoIcon /> : <img src={callsIcon} alt="" width={22} height={22} />}
               <span className={styles.visuallyHidden}>Позвонить {call.person.name}</span>
             </ScreenLink>

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from 'react'
 import { ScreenLink } from '../../navigation/ScreenLink'
-import { routes } from '../../navigation/routes'
-import alisa from '../chat-list/assets/alisa.png'
+import { readRouteId, routes } from '../../navigation/routes'
+import { chats, contacts, initials, type Chat } from '../chat-list/chats'
 import searchIcon from '../chat-list/assets/search.svg'
 import dotsIcon from '../chat-list/assets/dots.svg'
 import readIcon from '../chat-list/assets/read.svg'
@@ -24,13 +24,14 @@ import styles from './ChatScreen.module.css'
 type Reaction = { emoji: string; avatar: string }
 
 type Message = { id: number; out?: boolean; time: string; read?: boolean; reactions?: Reaction[] } & (
-  | { kind: 'text'; text: string }
+  | { kind: 'text'; text: string; sender?: string }
   | { kind: 'sticker' }
   | { kind: 'product' }
   | { kind: 'voice'; duration: string }
 )
 
-const initialMessages: Message[] = [
+// The conversation from Figma.
+const alisaMessages: Message[] = [
   { id: 1, kind: 'sticker', time: '9:41' },
   { id: 2, kind: 'text', out: true, read: true, text: 'Закидывай все свои идеи 😍👀', time: '9:41' },
   { id: 3, kind: 'product', time: '9:41', reactions: [{ emoji: heartFire, avatar: reactionMe }] },
@@ -39,11 +40,47 @@ const initialMessages: Message[] = [
   { id: 6, kind: 'voice', out: true, duration: '0:01', time: '9:41' },
 ]
 
+// Short made-up history for other chats, ending with the last message from the chat list.
+function conversation(chat: Chat): Message[] {
+  const last: Message = { id: 3, kind: 'text', text: chat.message, time: chat.time, sender: chat.sender, out: chat.read, read: chat.read }
+  if (chat.folder === 'channels') {
+    return [{ id: 1, kind: 'text', text: 'Добро пожаловать! Здесь делимся новостями и подборками 🛍️', time: '8:00', sender: chat.sender }, last]
+  }
+  return [
+    { id: 1, kind: 'text', text: 'Привет! 👋', time: '8:02' },
+    { id: 2, kind: 'text', out: true, read: true, text: 'Привет) Как дела?', time: '8:05' },
+    last,
+  ]
+}
+
+function peerStatus(chat: Chat | undefined, status: string | undefined) {
+  if (status) return status[0].toUpperCase() + status.slice(1)
+  if (chat?.sender) return chat.folder === 'channels' ? '2 500 участников' : '5 участников'
+  if (chat?.folder === 'channels') return 'Канал'
+  return 'Был(а) недавно'
+}
+
 // Bar heights of the voice message waveform, from Figma.
 const waveform = [4, 11, 14, 13, 11, 13, 9, 5, 2, 5, 4, 9, 5, 2, 5, 4, 7, 9, 6, 9, 8, 4, 11, 14, 13, 11, 2, 5, 4, 6, 9, 8, 4, 11, 14, 13, 7, 9, 6, 9, 8, 4, 11]
 
+function subscribe(onChange: () => void) {
+  window.addEventListener('hashchange', onChange)
+  return () => window.removeEventListener('hashchange', onChange)
+}
+
 export function ChatScreen() {
-  const [messages, setMessages] = useState(initialMessages)
+  // Opened from the chat list or contacts as #/chat?id=…; Alisa from Figma by default.
+  const id = useSyncExternalStore(subscribe, readRouteId) ?? 'alisa'
+  // A new id starts a fresh conversation state.
+  return <Conversation key={id} id={id} />
+}
+
+function Conversation({ id }: { id: string }) {
+  const chat = chats.find((item) => item.id === id)
+  const contact = contacts.find((item) => item.id === id)
+  const peer = chat ?? contact ?? chats[0]
+  const [messages, setMessages] = useState(() =>
+    peer.id === 'alisa' ? alisaMessages : chat ? conversation(chat) : [])
   const [draft, setDraft] = useState('')
   const screen = useRef<HTMLElement>(null)
   const list = useRef<HTMLOListElement>(null)
@@ -67,7 +104,7 @@ export function ChatScreen() {
   }
 
   return (
-    <section ref={screen} className={styles.screen} aria-label="Чат с Алисой">
+    <section ref={screen} className={styles.screen} aria-label={`Чат: ${peer.name}`}>
       <header className={styles.header}>
         <ScreenLink to={routes.chatList} className={`${styles.back} ${styles.glass}`}>
           <svg width="12" height="20" viewBox="0 0 12 20" fill="none" stroke="#1a1a1a" strokeWidth="2.4"
@@ -78,11 +115,15 @@ export function ChatScreen() {
           <span className={styles.visuallyHidden}>Все чаты</span>
         </ScreenLink>
         {/* Opens the contact profile (Karina's screen). */}
-        <ScreenLink to={routes.profile} className={styles.contact}>
-          <span className={`${styles.contactAvatar} ${styles.glass}`}><img src={alisa} alt="" /></span>
+        <ScreenLink to={routes.profile} id={peer.id} className={styles.contact}>
+          <span className={`${styles.contactAvatar} ${styles.glass}`}>
+            {peer.avatar
+              ? <img src={peer.avatar} alt="" />
+              : <span className={styles.initials} style={{ background: peer.color }}>{initials(peer.name)}</span>}
+          </span>
           <span className={styles.contactText}>
-            <span className={styles.contactName}>Алиса</span>
-            <span className={styles.contactStatus}>Был(а) недавно</span>
+            <span className={styles.contactName}>{peer.name}</span>
+            <span className={styles.contactStatus}>{peerStatus(chat, contact?.status)}</span>
           </span>
         </ScreenLink>
         <div className={`${styles.actions} ${styles.glass}`}>
@@ -92,6 +133,7 @@ export function ChatScreen() {
       </header>
 
       <ol ref={list} className={styles.messages}>
+        {messages.length === 0 && <li className={styles.empty}>Здесь пока пусто — напишите первым 👋</li>}
         {messages.map((message) => <MessageRow key={message.id} message={message} />)}
       </ol>
 
@@ -140,6 +182,7 @@ function MessageRow({ message }: { message: Message }) {
   return (
     <li className={`${styles.row} ${side}`}>
       <div className={`${styles.bubble} ${message.kind === 'voice' ? styles.voiceBubble : ''}`}>
+        {message.kind === 'text' && message.sender && !message.out && <div className={styles.sender}>{message.sender}</div>}
         {message.kind === 'text' && <p className={styles.text}>{message.text}<span className={styles.spacer} /></p>}
         {message.kind === 'voice' && <Voice duration={message.duration} />}
         {message.reactions && <Reactions reactions={message.reactions} />}
