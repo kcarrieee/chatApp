@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
 import alisa from '../chat-list/assets/alisa.png'
@@ -46,11 +46,16 @@ export function ChatScreen() {
   const [messages, setMessages] = useState(initialMessages)
   const [draft, setDraft] = useState('')
   const screen = useRef<HTMLElement>(null)
+  const list = useRef<HTMLOListElement>(null)
 
-  // Chats open at the newest message.
-  useLayoutEffect(() => {
-    screen.current?.scrollTo({ top: screen.current.scrollHeight })
-  }, [messages])
+  // Stay at the newest message, also when images and fonts load and grow the list.
+  useEffect(() => {
+    const scroller = screen.current
+    if (!scroller || !list.current) return
+    const observer = new ResizeObserver(() => scroller.scrollTo({ top: scroller.scrollHeight }))
+    observer.observe(list.current)
+    return () => observer.disconnect()
+  }, [])
 
   function send(event: FormEvent) {
     event.preventDefault()
@@ -86,7 +91,7 @@ export function ChatScreen() {
         </div>
       </header>
 
-      <ol className={styles.messages}>
+      <ol ref={list} className={styles.messages}>
         {messages.map((message) => <MessageRow key={message.id} message={message} />)}
       </ol>
 

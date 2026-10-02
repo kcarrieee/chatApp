@@ -7,7 +7,9 @@
   --out-ink: #a73afd;
   --sans: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   /* The screen is its own scroller, so the wallpaper stays put while messages move. */
-  height: 100%;
+  /* Reaches under the transparent status bar. */
+  height: calc(100% + var(--status-bar, 0px));
+  margin-top: calc(-1 * var(--status-bar, 0px));
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -60,8 +62,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 54px;
-  padding: 0 16px 10px;
+  height: calc(54px + var(--status-bar, 0px));
+  padding: var(--status-bar, 0px) 16px 10px;
   flex: none;
 }
 /* Soft scroll edge under the controls. */

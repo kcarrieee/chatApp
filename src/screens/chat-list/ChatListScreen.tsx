@@ -30,7 +30,7 @@ export function ChatListScreen() {
 
   function open(next: Tab, screen: HTMLElement | null) {
     setTab(next)
-    screen?.parentElement?.scrollTo({ top: 0 })
+    screen?.scrollTo({ top: 0 })
   }
 
   return (

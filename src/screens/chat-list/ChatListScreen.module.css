@@ -18,7 +18,10 @@
   --ink: #242429;
   --accent: #9757e9;
   --sans: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  min-height: 100%;
+  /* Own scroller reaching under the transparent status bar, so the sticky header covers it. */
+  height: calc(100% + var(--status-bar, 0px));
+  margin-top: calc(-1 * var(--status-bar, 0px));
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   color: var(--ink);
@@ -53,7 +56,7 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  padding-bottom: 10px;
+  padding: var(--status-bar, 0px) 0 10px;
 }
 /* Soft scroll edge: content fades and blurs under the header. */
 .header::before {
