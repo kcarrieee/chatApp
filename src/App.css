@@ -54,7 +54,14 @@
 .status-levels img:nth-child(3) { width: 6.832cqw; }
 .phone-content { flex: 1; min-height: 0; overflow: auto; }
 .prototype-screen { min-height: 100%; }
-.home-indicator { position: relative; height: 8.5cqw; flex: none; }
+/* Overlays the content like on a real iPhone, so screens can draw under it. */
+.home-indicator {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 3;
+  height: 8.5cqw;
+  pointer-events: none;
+}
 .home-indicator::after {
   content: '';
   position: absolute;
