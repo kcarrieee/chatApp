@@ -278,6 +278,12 @@
   overflow: hidden;
 }
 .productPhoto img { width: 100%; height: 100%; object-fit: cover; }
+.productEmoji {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-size: 56px;
+}
 .size,
 .discount {
   position: absolute;
@@ -336,14 +342,15 @@
   align-items: flex-end;
   gap: 2px;
   overflow: hidden;
-  opacity: .5;
 }
 .wave i {
   flex: none;
   width: 2px;
   border-radius: 2px;
   background: #a161f3;
+  opacity: .5;
 }
+.wave i.played { opacity: 1; }
 .voiceTime {
   display: flex;
   align-items: center;
@@ -422,3 +429,33 @@
 .field input:focus-visible { outline: 0; }
 .field input::placeholder { color: #808093; }
 .field img { opacity: .6; }
+
+/* ---------- Voice recording (simulated) ---------- */
+
+.cancel { font-size: 26px; line-height: 1; color: #242429; }
+.recording {
+  gap: 8px;
+  color: var(--ink);
+  font: 500 16px/20px var(--sans);
+  font-variant-numeric: tabular-nums;
+}
+.recDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff383c;
+  animation: blink 1s ease-in-out infinite;
+}
+@keyframes blink { 50% { opacity: .25; } }
+.recHint {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #808093;
+  font-weight: 400;
+}
+.sendButton {
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 8px 24px rgb(151 87 233 / .35);
+}

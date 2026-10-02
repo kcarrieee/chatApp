@@ -63,10 +63,22 @@ export const chats: Chat[] = [
   { id: 'mama', name: 'Мама', color: '#ff383c', folder: 'personal', message: 'Не забудь шапку, сегодня обещали холод', time: 'Вчера' },
   { id: 'books', name: 'Книжный клуб', color: '#34c759', folder: 'channels', sender: 'Оля', message: 'В субботу обсуждаем «Мастера и Маргариту», кто с нами?', time: 'Пн', muted: true, unread: 12, members: '214 участников' },
   { id: 'sergey', name: 'Сергей Петров', color: '#6155f5', folder: 'work', message: 'Договор подписал, скан в почте', time: 'Пн', read: true },
+  { id: 'product-team', name: 'Продукт · Chat Concept', color: '#9757e9', folder: 'work', sender: 'Карина', message: 'Собрала фидбек по прототипу, гляньте до созвона', time: 'Пн', unread: 2, members: '7 участников' },
+  { id: 'masha', name: 'Маша', color: '#ff2d92', folder: 'personal', message: 'Ахаха, это лучшее видео за неделю 😂', time: 'Пн', unread: 4 },
+  { id: 'neighbors', name: 'Соседи по дому', color: '#00c3d0', folder: 'personal', sender: 'Ирина', message: 'Завтра отключат горячую воду с 10 до 18 🙃', time: 'Пн', muted: true, unread: 23, members: '48 участников' },
+  { id: 'wb-sales', name: 'WB Скидки', color: '#cb11ab', folder: 'channels', message: 'Распродажа до −70% только до воскресенья 🔥', time: 'Вс', muted: true, unread: 5, verified: true, members: '3,4 млн подписчиков' },
+  { id: 'oleg', name: 'Олег Смирнов', color: '#ff8d28', folder: 'work', message: 'Созвон перенесли на 16:00, ссылка та же', time: 'Вс' },
+  { id: 'artem', name: 'Артём', color: '#34c759', folder: 'personal', message: 'Го в субботу на каток? ⛸️', time: 'Сб', read: true },
+  { id: 'coffee', name: 'Кофейня на углу', color: '#a2845e', folder: 'channels', message: 'Сезонный раф с тыквой уже в меню 🎃☕️', time: 'Сб', members: '12 тыс. подписчиков' },
+  { id: 'nastya', name: 'Настя', color: '#ff383c', folder: 'personal', message: 'Спасибо за подарок!! Он идеальный 🎁💜', time: 'Пт' },
+  { id: 'support', name: 'Поддержка WB', color: '#9757e9', folder: 'personal', message: 'Обращение №48213 решено. Оцените, пожалуйста, нашу работу ⭐️', time: 'Чт', verified: true },
+  { id: 'dad', name: 'Папа', color: '#0088ff', folder: 'personal', message: 'Позвони, как будет минутка', time: 'Ср', read: true },
+  { id: 'yoga', name: 'Йога по утрам', color: '#30b0c7', folder: 'channels', sender: 'Аня', message: 'Завтра практика в 7:30, берите коврики 🧘‍♀️', time: '28.09', muted: true, members: '86 участников' },
 ]
 
 export function initials(name: string) {
-  return name.split(' ').slice(0, 2).map((word) => word[0]).join('').toUpperCase()
+  // Only words that start with a letter: "Продукт · Chat Concept" → "ПC".
+  return name.split(' ').filter((word) => /^\p{L}/u.test(word)).slice(0, 2).map((word) => word[0]).join('').toUpperCase()
 }
 
 // ---------- Contacts, calls and own profile ----------
