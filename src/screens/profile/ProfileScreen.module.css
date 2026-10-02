@@ -1,0 +1,8 @@
+.screen { min-height: 100%; padding: 28px 24px; color: #242128; background: #fff; }
+.eyebrow { margin: 0 0 10px; color: #8a8490; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.title { margin: 0 0 14px; font-size: 28px; line-height: 1.15; letter-spacing: -.6px; }
+.description { margin: 0 0 30px; color: #77717e; font-size: 15px; line-height: 1.5; }
+.actions { display: grid; gap: 12px; }
+.link { display: block; padding: 16px; border-radius: 14px; background: #f4f1f7; color: #6926a2; text-decoration: none; font-size: 15px; line-height: 1.4; }
+.link:hover { background: #ebe4f3; }
+.link:focus-visible { outline: 2px solid #6926a2; outline-offset: 3px; }
