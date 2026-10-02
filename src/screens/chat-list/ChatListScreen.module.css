@@ -146,6 +146,7 @@
 
 .avatar {
   position: relative;
+  display: block;
   flex: none;
   width: 62px;
   height: 62px;

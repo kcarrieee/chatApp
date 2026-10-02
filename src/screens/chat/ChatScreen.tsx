@@ -55,8 +55,7 @@ function conversation(chat: Chat): Message[] {
 
 function peerStatus(chat: Chat | undefined, status: string | undefined) {
   if (status) return status[0].toUpperCase() + status.slice(1)
-  if (chat?.sender) return chat.folder === 'channels' ? '2 500 участников' : '5 участников'
-  if (chat?.folder === 'channels') return 'Канал'
+  if (chat?.members) return chat.members
   return 'Был(а) недавно'
 }
 

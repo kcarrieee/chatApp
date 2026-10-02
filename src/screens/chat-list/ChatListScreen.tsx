@@ -4,6 +4,7 @@ import { routes } from '../../navigation/routes'
 import { chats, folders, type Chat, type FolderId } from './chats'
 import { Avatar } from './Avatar'
 import { CallsTab, ContactsTab, ProfileTab } from './tabs'
+import { Search } from './Search'
 import stories from './assets/stories.png'
 import editIcon from './assets/edit.svg'
 import dotsIcon from './assets/dots.svg'
@@ -27,10 +28,19 @@ const tabs: { id: Tab; label: string; icon: string }[] = [
 
 export function ChatListScreen() {
   const [tab, setTab] = useState<Tab>('chats')
+  const [searching, setSearching] = useState(false)
 
   function open(next: Tab, screen: HTMLElement | null) {
     setTab(next)
     screen?.scrollTo({ top: 0 })
+  }
+
+  if (searching) {
+    return (
+      <section className={styles.screen} aria-label="Поиск">
+        <Search onClose={() => setSearching(false)} />
+      </section>
+    )
   }
 
   return (
@@ -55,8 +65,8 @@ export function ChatListScreen() {
             <img className={styles.me} src={me} alt="" width={28} height={28} />
           </button>
         </div>
-        {/* Search gets its own screen from separate mockups. */}
-        <button type="button" className={`${styles.search} ${styles.glass}`} aria-label="Поиск">
+        <button type="button" className={`${styles.search} ${styles.glass}`} aria-label="Поиск"
+          onClick={() => setSearching(true)}>
           <img src={searchIcon} alt="" width={24} height={24} />
         </button>
       </nav>
