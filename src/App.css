@@ -17,6 +17,8 @@
   isolation: isolate;
 }
 .phone-screen {
+  /* Height of the status bar; screens may draw under it with a negative margin. */
+  --status-bar: 15.5cqw;
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -26,6 +28,11 @@
   flex-direction: column;
 }
 .status-bar {
+  /* Transparent overlay, so a screen's own background can show through. */
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+  pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,7 +59,7 @@
 .status-levels img:nth-child(1) { width: 4.8cqw; }
 .status-levels img:nth-child(2) { width: 4.285425cqw; }
 .status-levels img:nth-child(3) { width: 6.832cqw; }
-.phone-content { flex: 1; min-height: 0; overflow: auto; }
+.phone-content { flex: 1; min-height: 0; overflow: auto; padding-top: var(--status-bar); }
 .prototype-screen { min-height: 100%; }
 /* Overlays the content like on a real iPhone, so screens can draw under it. */
 .home-indicator {
@@ -98,6 +105,7 @@
   }
 
   .phone-screen {
+    --status-bar: 0px;
     border-radius: 0;
     padding: env(safe-area-inset-top) env(safe-area-inset-right)
       env(safe-area-inset-bottom) env(safe-area-inset-left);
