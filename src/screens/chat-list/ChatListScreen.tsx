@@ -21,6 +21,9 @@ import styles from './ChatListScreen.module.css'
 
 type Tab = 'contacts' | 'calls' | 'chats' | 'profile'
 
+// Own story is creation-only (flow skipped in the prototype), so the viewer shows the others.
+const viewable = storyUsers.filter((user) => !user.mine)
+
 const tabs: { id: Tab; label: string; icon: string }[] = [
   { id: 'contacts', label: 'Контакты', icon: contactsIcon },
   { id: 'calls', label: 'Звонки', icon: callsIcon },
@@ -38,13 +41,14 @@ export function ChatListScreen() {
 
   function open(next: Tab, screen: HTMLElement | null) {
     setTab(next)
+    setStoriesOpen(false)
     screen?.scrollTo({ top: 0 })
   }
 
   if (viewing !== null) {
     return (
       <section className={styles.screen} aria-label="Истории">
-        <StoryViewer users={storyUsers} start={viewing} onSeen={markSeen} onClose={() => setViewing(null)} />
+        <StoryViewer users={viewable} start={viewing} onSeen={markSeen} onClose={() => setViewing(null)} />
       </section>
     )
   }
@@ -100,12 +104,12 @@ function ChatsTab({ storiesOpen, onStoriesOpen, seen, onOpenStory }: {
   const visible = folder === 'all' ? chats : chats.filter((chat) => chat.folder === folder)
   const header = useRef<HTMLElement>(null)
 
-  // Scrolling the list folds the stories row back into the title, like in Telegram.
+  // Any scroll down folds the stories row back into the title.
   useEffect(() => {
     const screen = header.current?.closest('section')
     if (!storiesOpen || !screen) return
     const start = screen.scrollTop
-    const onScroll = () => screen.scrollTop > start + 40 && onStoriesOpen(false)
+    const onScroll = () => screen.scrollTop > start + 4 && onStoriesOpen(false)
     screen.addEventListener('scroll', onScroll)
     return () => screen.removeEventListener('scroll', onScroll)
   }, [storiesOpen, onStoriesOpen])
@@ -128,16 +132,19 @@ function ChatsTab({ storiesOpen, onStoriesOpen, seen, onOpenStory }: {
         </div>
         <div className={`${styles.storyRow} ${storiesOpen ? styles.storyRowOpen : ''}`} inert={!storiesOpen}>
           <div className={styles.storyRowInner} aria-label="Истории">
-            {storyUsers.map((user, i) => (
+            {storyUsers.filter((user) => user.mine).map((user) => (
+              // Story creation flow is out of scope, so this one is not interactive.
+              <div key={user.id} className={styles.storyItem}>
+                <span className={styles.myStory}>
+                  <img src={user.avatar} alt="" />
+                  <span className={styles.plus} aria-hidden="true">+</span>
+                </span>
+                <span className={styles.storyName}>{user.name}</span>
+              </div>
+            ))}
+            {viewable.map((user, i) => (
               <button key={user.id} type="button" className={styles.storyItem} onClick={() => onOpenStory(i)}>
-                {user.mine ? (
-                  <span className={styles.myStory}>
-                    <img src={user.avatar} alt="" />
-                    <span className={styles.plus} aria-hidden="true">+</span>
-                  </span>
-                ) : (
-                  <Avatar person={{ ...user, stories: user.stories.length }} seen={seen.includes(user.id)} />
-                )}
+                <Avatar person={{ ...user, stories: user.stories.length }} seen={seen.includes(user.id)} />
                 <span className={styles.storyName}>{user.name}</span>
               </button>
             ))}
