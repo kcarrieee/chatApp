@@ -1,0 +1,141 @@
+.viewer {
+  --story-duration: 5s;
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background: radial-gradient(circle at 30% 20%, #6b3fd6, #1b0f2e 70%);
+  color: #fff;
+  font-family: var(--sans);
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.viewer :where(button) {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: appear .25s ease-out;
+}
+@keyframes appear { from { opacity: 0; } }
+
+/* Dark fades keep the white controls readable on any photo. */
+.viewer::before,
+.viewer::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 160px;
+  background: linear-gradient(rgb(0 0 0 / .45), transparent);
+  pointer-events: none;
+}
+.viewer::after { inset: auto 0 0; background: linear-gradient(transparent, rgb(0 0 0 / .5)); }
+
+.top {
+  position: absolute;
+  z-index: 2;
+  inset: 0 0 auto;
+  padding: calc(var(--status-bar, 0px) + 4px) 12px 0;
+}
+.progress { display: flex; gap: 4px; }
+.segment {
+  flex: 1;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgb(255 255 255 / .35);
+}
+.segment i { display: block; height: 100%; background: #fff; }
+.done { width: 100%; }
+.running { width: 0; animation: fill var(--story-duration) linear forwards; }
+.paused .running { animation-play-state: paused; }
+@keyframes fill { to { width: 100%; } }
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.author img { border-radius: 50%; object-fit: cover; }
+.name { font: 550 15px/18px var(--sans); }
+.time { flex: 1; font-size: 13px; color: rgb(255 255 255 / .7); }
+.close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 28px;
+  line-height: 34px;
+}
+.close:hover { background: rgb(255 255 255 / .15); }
+
+/* Invisible tap zones: left third goes back, the rest forward. */
+.prevZone,
+.nextZone {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+}
+.prevZone { left: 0; width: 33%; }
+.nextZone { right: 0; width: 67%; }
+
+.caption {
+  position: absolute;
+  z-index: 2;
+  left: 16px;
+  right: 16px;
+  bottom: 96px;
+  margin: 0;
+  text-align: center;
+  font: 550 20px/26px var(--sans);
+  text-shadow: 0 1px 8px rgb(0 0 0 / .5);
+  pointer-events: none;
+}
+
+.bottom {
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px 36px;
+}
+@media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
+  .bottom { padding-bottom: 12px; }
+}
+.reply {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid rgb(255 255 255 / .5);
+  border-radius: 22px;
+  outline: 0;
+  background: rgb(0 0 0 / .2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  font: 400 16px/20px var(--sans);
+}
+.reply::placeholder { color: rgb(255 255 255 / .75); }
+.reply:focus { border-color: #fff; }
+.like {
+  width: 44px;
+  height: 44px;
+  font-size: 26px;
+  transition: transform .15s;
+}
+.like:active { transform: scale(1.25); }
+.views { font-size: 15px; color: rgb(255 255 255 / .85); }

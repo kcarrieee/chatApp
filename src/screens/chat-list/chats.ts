@@ -8,6 +8,15 @@ import wbchat from './assets/wbchat.png'
 import andrey from './assets/andrey.png'
 import liza from './assets/liza.png'
 import katrin from './assets/katrin.png'
+import meAvatar from './assets/me.jpg'
+import storyMe from './assets/story-me.jpg'
+import storyAlisa from './assets/story-alisa.jpg'
+import storyLiza from './assets/story-liza.jpg'
+import storyViki from './assets/story-viki.jpg'
+import storyElizaveta from './assets/story-elizaveta.jpg'
+import storyKep from './assets/story-kep.jpg'
+import product from '../chat/assets/product.png'
+import sticker from '../chat/assets/sticker.png'
 
 export type FolderId = 'all' | 'personal' | 'work' | 'channels'
 
@@ -44,10 +53,10 @@ export const chats: Chat[] = [
   { id: 'alisa', name: 'Алиса', avatar: alisa, folder: 'personal', message: 'Привет) сделал новую проект, зацени)) 😎⚡️', time: '9:41', unread: 1, stories: 1 },
   { id: 'viki', name: 'Вики', avatar: viki, folder: 'personal', message: 'Мы скоро начнем прямую трансляцию', time: '9:41', unread: 1, muted: true, stories: 1 },
   { id: 'berries', name: 'Ягодные кочевники', avatar: berries, folder: 'channels', sender: 'Мартин', message: 'Нас уже 2 500 участников! Ура!', time: '9:22', muted: true, members: '505 543 подписчика' },
-  { id: 'elizaveta', name: 'Елизавета', avatar: elizaveta, folder: 'personal', message: 'Столик на четверых, в 14:00, будем тебя ждать)', time: '9:12', read: true, stories: 5 },
+  { id: 'elizaveta', name: 'Елизавета', avatar: elizaveta, folder: 'personal', message: 'Столик на четверых, в 14:00, будем тебя ждать)', time: '9:12', read: true, stories: 2 },
   { id: 'wbchat', name: 'WB Chat', avatar: wbchat, folder: 'channels', message: 'Приветствуем вас в нашем официальном канале! 💜💜💜', time: '8:12', unread: 1, verified: true, members: '1,2 млн подписчиков' },
   { id: 'andrey', name: 'Андрей', avatar: andrey, folder: 'work', message: 'Отправила документы, проверь почту', time: '8:28', unread: 1 },
-  { id: 'liza', name: 'Лиза', avatar: liza, folder: 'personal', message: 'Буду через 15 минут, подождите 🙏🏻', time: '9:12', stories: 3 },
+  { id: 'liza', name: 'Лиза', avatar: liza, folder: 'personal', message: 'Буду через 15 минут, подождите 🙏🏻', time: '9:12', stories: 2 },
   { id: 'katrin', name: 'Кэтрин', avatar: katrin, folder: 'work', message: 'Проект готов, можно отправлять клиенту', time: '8:28', unread: 1 },
   { id: demoContact.id, name: demoContact.name, color: '#0088ff', folder: 'personal', message: 'Созвонимся вечером? Есть пара идей по концепту', time: 'Вчера', read: true },
   { id: 'design-team', name: 'Команда дизайна', color: '#ff8d28', folder: 'work', sender: 'Карина', message: 'Скинула новые макеты в фигму, посмотрите до обеда', time: 'Вчера', unread: 3, members: '5 участников' },
@@ -119,3 +128,30 @@ export const me = {
   phone: '+7 900 123-45-67',
   about: 'Дизайнер. Люблю клубнику и длинные голосовые 🍓',
 }
+
+// ---------- Stories ----------
+
+export type StoryUser = {
+  id: string
+  name: string
+  avatar: string
+  /** Own stories: the first circle with a plus. */
+  mine?: boolean
+  stories: { image: string; time: string; caption?: string }[]
+}
+
+// Ring counts in the chat list match the number of stories here.
+export const storyUsers: StoryUser[] = [
+  { id: 'me', name: 'История', avatar: meAvatar, mine: true, stories: [{ image: storyMe, time: '3 ч', caption: 'Новые заколки 🍓' }] },
+  { id: 'liza', name: 'Лиза', avatar: liza, stories: [
+    { image: storyLiza, time: '1 ч' },
+    { image: product, time: '40 мин', caption: 'Нашла идеальную блузку 💗' },
+  ] },
+  { id: 'viki', name: 'Вики', avatar: viki, stories: [{ image: storyViki, time: '2 ч', caption: 'Скоро эфир!' }] },
+  { id: 'elizaveta', name: 'Елизавета', avatar: elizaveta, stories: [
+    { image: storyElizaveta, time: '5 ч' },
+    { image: sticker, time: '4 ч', caption: 'Всем хорошего дня 💜' },
+  ] },
+  { id: 'kep', name: 'Кэп 2288', avatar: storyKep, stories: [{ image: storyKep, time: '6 ч' }] },
+  { id: 'alisa', name: 'Алиса', avatar: alisa, stories: [{ image: storyAlisa, time: '8 ч', caption: 'Новый проект готов ⚡️' }] },
+]

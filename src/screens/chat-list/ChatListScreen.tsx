@@ -1,10 +1,11 @@
-import { useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
-import { chats, folders, type Chat, type FolderId } from './chats'
+import { chats, folders, storyUsers, type Chat, type FolderId } from './chats'
 import { Avatar } from './Avatar'
 import { CallsTab, ContactsTab, ProfileTab } from './tabs'
 import { Search } from './Search'
+import { StoryViewer } from './StoryViewer'
 import stories from './assets/stories.png'
 import editIcon from './assets/edit.svg'
 import dotsIcon from './assets/dots.svg'
@@ -29,10 +30,23 @@ const tabs: { id: Tab; label: string; icon: string }[] = [
 export function ChatListScreen() {
   const [tab, setTab] = useState<Tab>('chats')
   const [searching, setSearching] = useState(false)
+  // Lives here, so the stories row stays open after closing the viewer.
+  const [storiesOpen, setStoriesOpen] = useState(false)
+  const [viewing, setViewing] = useState<number | null>(null)
+  const [seen, setSeen] = useState<string[]>([])
+  const markSeen = useCallback((id: string) => setSeen((ids) => ids.includes(id) ? ids : [...ids, id]), [])
 
   function open(next: Tab, screen: HTMLElement | null) {
     setTab(next)
     screen?.scrollTo({ top: 0 })
+  }
+
+  if (viewing !== null) {
+    return (
+      <section className={styles.screen} aria-label="Истории">
+        <StoryViewer users={storyUsers} start={viewing} onSeen={markSeen} onClose={() => setViewing(null)} />
+      </section>
+    )
   }
 
   if (searching) {
@@ -45,7 +59,9 @@ export function ChatListScreen() {
 
   return (
     <section className={styles.screen} aria-label={tabs.find((item) => item.id === tab)?.label ?? 'Профиль'}>
-      {tab === 'chats' && <ChatsTab />}
+      {tab === 'chats' && (
+        <ChatsTab storiesOpen={storiesOpen} onStoriesOpen={setStoriesOpen} seen={seen} onOpenStory={setViewing} />
+      )}
       {tab === 'contacts' && <ContactsTab />}
       {tab === 'calls' && <CallsTab />}
       {tab === 'profile' && <ProfileTab />}
@@ -74,17 +90,33 @@ export function ChatListScreen() {
   )
 }
 
-function ChatsTab() {
+function ChatsTab({ storiesOpen, onStoriesOpen, seen, onOpenStory }: {
+  storiesOpen: boolean
+  onStoriesOpen: (open: boolean) => void
+  seen: string[]
+  onOpenStory: (index: number) => void
+}) {
   const [folder, setFolder] = useState<FolderId>('all')
   const visible = folder === 'all' ? chats : chats.filter((chat) => chat.folder === folder)
+  const header = useRef<HTMLElement>(null)
+
+  // Scrolling the list folds the stories row back into the title, like in Telegram.
+  useEffect(() => {
+    const screen = header.current?.closest('section')
+    if (!storiesOpen || !screen) return
+    const start = screen.scrollTop
+    const onScroll = () => screen.scrollTop > start + 40 && onStoriesOpen(false)
+    screen.addEventListener('scroll', onScroll)
+    return () => screen.removeEventListener('scroll', onScroll)
+  }, [storiesOpen, onStoriesOpen])
 
   return (
     <>
-      <header className={styles.header}>
+      <header ref={header} className={styles.header}>
         <div className={styles.titleRow}>
           <h1 className={styles.title}>Чаты</h1>
-          {/* Opens the stories viewer later. */}
-          <button type="button" className={styles.stories} aria-label="Истории">
+          <button type="button" className={`${styles.stories} ${storiesOpen ? styles.storiesHidden : ''}`}
+            aria-label="Показать истории" aria-expanded={storiesOpen} onClick={() => onStoriesOpen(true)}>
             <img src={stories} alt="" width={60} height={32} />
           </button>
           <button type="button" className={styles.iconButton} aria-label="Новый чат">
@@ -93,6 +125,23 @@ function ChatsTab() {
           <button type="button" className={styles.iconButton} aria-label="Ещё">
             <img src={dotsIcon} alt="" width={24} height={24} />
           </button>
+        </div>
+        <div className={`${styles.storyRow} ${storiesOpen ? styles.storyRowOpen : ''}`} inert={!storiesOpen}>
+          <div className={styles.storyRowInner} aria-label="Истории">
+            {storyUsers.map((user, i) => (
+              <button key={user.id} type="button" className={styles.storyItem} onClick={() => onOpenStory(i)}>
+                {user.mine ? (
+                  <span className={styles.myStory}>
+                    <img src={user.avatar} alt="" />
+                    <span className={styles.plus} aria-hidden="true">+</span>
+                  </span>
+                ) : (
+                  <Avatar person={{ ...user, stories: user.stories.length }} seen={seen.includes(user.id)} />
+                )}
+                <span className={styles.storyName}>{user.name}</span>
+              </button>
+            ))}
+          </div>
         </div>
         <div className={`${styles.folders} ${styles.glass}`} role="group" aria-label="Папки">
           {folders.map((item) => (
@@ -108,16 +157,16 @@ function ChatsTab() {
       </header>
 
       <ul className={styles.list}>
-        {visible.map((chat) => <li key={chat.id}><ChatRow chat={chat} /></li>)}
+        {visible.map((chat) => <li key={chat.id}><ChatRow chat={chat} seen={seen.includes(chat.id)} /></li>)}
       </ul>
     </>
   )
 }
 
-function ChatRow({ chat }: { chat: Chat }) {
+function ChatRow({ chat, seen }: { chat: Chat; seen: boolean }) {
   return (
     <ScreenLink to={routes.chat} id={chat.id} className={styles.row}>
-      <Avatar person={chat} />
+      <Avatar person={chat} seen={seen} />
       <div className={styles.content}>
         <div className={styles.main}>
           <div className={styles.name}>
