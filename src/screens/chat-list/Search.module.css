@@ -211,8 +211,12 @@
   position: sticky;
   bottom: 0;
   z-index: 2;
-  padding: 16px 12px 8px;
+  /* Clears the home indicator and rounded corners, like the main tab bar. */
+  padding: 16px 12px 32px;
   background: linear-gradient(rgb(255 255 255 / 0), #fff 40%);
+}
+@media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
+  .categories { padding-bottom: 8px; }
 }
 .pill {
   height: 41px;
