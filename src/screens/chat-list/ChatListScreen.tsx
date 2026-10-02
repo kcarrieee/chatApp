@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
-import { chats, folders, storyUsers, type Chat, type FolderId } from './chats'
+import { chats, folders, storyUsers, type Chat, type FolderId, type StoryUser } from './chats'
 import { Avatar } from './Avatar'
 import { CallsTab, ContactsTab, ProfileTab } from './tabs'
 import { Search } from './Search'
@@ -35,7 +35,8 @@ export function ChatListScreen() {
   const [searching, setSearching] = useState(false)
   // Lives here, so the stories row stays open after closing the viewer.
   const [storiesOpen, setStoriesOpen] = useState(false)
-  const [viewing, setViewing] = useState<number | null>(null)
+  // The stories row plays everyone in a row, an avatar in the list plays one person only.
+  const [viewing, setViewing] = useState<{ users: StoryUser[]; start: number } | null>(null)
   const [seen, setSeen] = useState<string[]>([])
   const markSeen = useCallback((id: string) => setSeen((ids) => ids.includes(id) ? ids : [...ids, id]), [])
 
@@ -48,7 +49,7 @@ export function ChatListScreen() {
   if (viewing !== null) {
     return (
       <section className={styles.screen} aria-label="Истории">
-        <StoryViewer users={viewable} start={viewing} onSeen={markSeen} onClose={() => setViewing(null)} />
+        <StoryViewer users={viewing.users} start={viewing.start} onSeen={markSeen} onClose={() => setViewing(null)} />
       </section>
     )
   }
@@ -64,7 +65,7 @@ export function ChatListScreen() {
   return (
     <section className={styles.screen} aria-label={tabs.find((item) => item.id === tab)?.label ?? 'Профиль'}>
       {tab === 'chats' && (
-        <ChatsTab storiesOpen={storiesOpen} onStoriesOpen={setStoriesOpen} seen={seen} onOpenStory={setViewing} />
+        <ChatsTab storiesOpen={storiesOpen} onStoriesOpen={setStoriesOpen} seen={seen} onOpenStory={(users, start) => setViewing({ users, start })} />
       )}
       {tab === 'contacts' && <ContactsTab />}
       {tab === 'calls' && <CallsTab />}
@@ -98,7 +99,7 @@ function ChatsTab({ storiesOpen, onStoriesOpen, seen, onOpenStory }: {
   storiesOpen: boolean
   onStoriesOpen: (open: boolean) => void
   seen: string[]
-  onOpenStory: (index: number) => void
+  onOpenStory: (users: StoryUser[], start: number) => void
 }) {
   const [folder, setFolder] = useState<FolderId>('all')
   const visible = folder === 'all' ? chats : chats.filter((chat) => chat.folder === folder)
@@ -143,7 +144,7 @@ function ChatsTab({ storiesOpen, onStoriesOpen, seen, onOpenStory }: {
               </div>
             ))}
             {viewable.map((user, i) => (
-              <button key={user.id} type="button" className={styles.storyItem} onClick={() => onOpenStory(i)}>
+              <button key={user.id} type="button" className={styles.storyItem} onClick={() => onOpenStory(viewable, i)}>
                 <Avatar person={{ ...user, stories: user.stories.length }} seen={seen.includes(user.id)} />
                 <span className={styles.storyName}>{user.name}</span>
               </button>
@@ -164,7 +165,19 @@ function ChatsTab({ storiesOpen, onStoriesOpen, seen, onOpenStory }: {
       </header>
 
       <ul className={styles.list}>
-        {visible.map((chat) => <li key={chat.id}><ChatRow chat={chat} seen={seen.includes(chat.id)} /></li>)}
+        {visible.map((chat) => {
+          const storyUser = viewable.find((user) => user.id === chat.id)
+          return (
+            <li key={chat.id} className={styles.rowItem}>
+              <ChatRow chat={chat} seen={seen.includes(chat.id)} />
+              {/* Sibling of the row link (a button can't sit inside a link), laid over the avatar. */}
+              {storyUser && (
+                <button type="button" className={styles.avatarStory} aria-label={`История: ${chat.name}`}
+                  onClick={() => onOpenStory([storyUser], 0)} />
+              )}
+            </li>
+          )
+        })}
       </ul>
     </>
   )

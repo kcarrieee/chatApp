@@ -203,6 +203,15 @@
   text-decoration: none;
 }
 .row:hover { background: #f7f7f8; }
+.rowItem { position: relative; }
+.avatarStory {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+}
 
 .avatar {
   position: relative;
