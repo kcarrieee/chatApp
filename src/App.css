@@ -21,6 +21,8 @@
   --status-bar: 15.5cqw;
   position: absolute;
   inset: 0;
+  /* Keeps screen layers (sticky headers, blur) below the bezel. */
+  isolation: isolate;
   overflow: hidden;
   border-radius: 11cqw;
   background: white;
