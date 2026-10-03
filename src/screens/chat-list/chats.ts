@@ -58,7 +58,7 @@ export const chats: Chat[] = [
   { id: 'andrey', name: 'Андрей', avatar: andrey, folder: 'work', message: 'Отправила документы, проверь почту', time: '8:28', unread: 1 },
   { id: 'liza', name: 'Лиза', avatar: liza, folder: 'personal', message: 'Буду через 15 минут, подождите 🙏🏻', time: '9:12', stories: 2 },
   { id: 'katrin', name: 'Кэтрин', avatar: katrin, folder: 'work', message: 'Проект готов, можно отправлять клиенту', time: '8:28', unread: 1 },
-  { id: demoContact.id, name: demoContact.name, color: '#0088ff', folder: 'personal', message: 'Созвонимся вечером? Есть пара идей по концепту', time: 'Вчера', read: true },
+  { id: demoContact.id, name: demoContact.name, avatar: demoContact.avatar, color: '#0088ff', folder: 'personal', message: 'Созвонимся вечером? Есть пара идей по концепту', time: 'Вчера', read: true },
   { id: 'design-team', name: 'Команда дизайна', color: '#ff8d28', folder: 'work', sender: 'Карина', message: 'Скинула новые макеты в фигму, посмотрите до обеда', time: 'Вчера', unread: 3, members: '5 участников' },
   { id: 'mama', name: 'Мама', color: '#ff383c', folder: 'personal', message: 'Не забудь шапку, сегодня обещали холод', time: 'Вчера' },
   { id: 'books', name: 'Книжный клуб', color: '#34c759', folder: 'channels', sender: 'Оля', message: 'В субботу обсуждаем «Мастера и Маргариту», кто с нами?', time: 'Пн', muted: true, unread: 12, members: '214 участников' },

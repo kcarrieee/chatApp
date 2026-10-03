@@ -1,7 +1,9 @@
 // Shared demo contact for chat, profile and call screens. No backend required.
 export const demoContact = {
   id: 'alex',
-  name: 'Александр',
-  initials: 'А',
-  status: 'В сети',
+  name: 'Татьяна',
+  initials: 'Т',
+  status: 'был(а) недавно',
+  avatar: `${import.meta.env.BASE_URL}assets/audio-call/tatyana.svg`,
+  portrait: `${import.meta.env.BASE_URL}assets/profile/portrait.svg`,
 }
