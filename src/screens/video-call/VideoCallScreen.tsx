@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
 import { useCamera } from './useCamera'
-import { useCallSounds } from '../audio-call/useCallSounds'
+import { useCallSeconds, useCallSession } from '../audio-call/callSession'
 import styles from './VideoCallScreen.module.css'
 
 const assets = `${import.meta.env.BASE_URL}assets/video-call/`
@@ -32,18 +32,11 @@ export function VideoCallScreen() {
   const [speaker, setSpeaker] = useState(false)
   const [effectsOpen, setEffectsOpen] = useState(false)
   const [effect, setEffect] = useState(2)
-  const [seconds, setSeconds] = useState(0)
-  const [connected, setConnected] = useState(false)
+  const connectedAt = useCallSession(peer.id)
+  const seconds = useCallSeconds(connectedAt)
+  const connected = connectedAt !== null
   const carousel = useRef<HTMLDivElement>(null)
-  useCallSounds(connected)
 
-  useEffect(() => {
-    const start = Date.now() + 3000
-    const timer = window.setInterval(() => {
-      if (Date.now() >= start) { setConnected(true); setSeconds(Math.floor((Date.now() - start) / 1000)) }
-    }, 1000)
-    return () => window.clearInterval(timer)
-  }, [])
   useEffect(() => {
     if (effectsOpen && carousel.current) {
       const item = carousel.current.children[effect] as HTMLElement

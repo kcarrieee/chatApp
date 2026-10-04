@@ -1,10 +1,10 @@
 import { initials } from '../chat-list/chats'
 import { usePeer } from '../../data/usePeer'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
-import { useCallSounds } from './useCallSounds'
+import { useCallSeconds, useCallSession } from './callSession'
 import styles from './AudioCallScreen.module.css'
 
 const assets = `${import.meta.env.BASE_URL}assets/audio-call/`
@@ -18,24 +18,12 @@ function Icon({ name }: { name: string }) {
 export function AudioCallScreen({ theme = 'dark' }: { theme?: CallTheme }) {
   const peer = usePeer()
   const reducedMotion = useReducedMotion()
-  const [connectedAt, setConnectedAt] = useState<number | null>(null)
-  const [seconds, setSeconds] = useState(0)
+  const connectedAt = useCallSession(peer.id)
+  const seconds = useCallSeconds(connectedAt)
   const [muted, setMuted] = useState(false)
   const [speaker, setSpeaker] = useState(false)
 
-  useEffect(() => {
-    const connection = window.setTimeout(() => setConnectedAt(Date.now()), 3000)
-    return () => window.clearTimeout(connection)
-  }, [])
-
-  useEffect(() => {
-    if (connectedAt === null) return
-    const timer = window.setInterval(() => setSeconds(Math.floor((Date.now() - connectedAt) / 1000)), 1000)
-    return () => window.clearInterval(timer)
-  }, [connectedAt])
-
   const connected = connectedAt !== null
-  useCallSounds(connected)
   const duration = `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`
 
   return (
