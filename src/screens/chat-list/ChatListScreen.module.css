@@ -17,6 +17,24 @@
 .screen {
   --ink: #242429;
   --accent: #9757e9;
+  --bg: #fff;
+  --bg-rgb: 255 255 255;
+  --strong: #000;
+  --muted-text: #808093;
+  --time: rgb(60 60 67 / .6);
+  --separator: #e6e6e6;
+  --hover: #f7f7f8;
+  --selected: #eee;
+  --folder-active: #7e2ee6;
+  --mark-bg: rgb(120 120 120 / .2);
+  --count-muted: rgb(120 120 128 / .16);
+  --glass-bg: rgb(255 255 255 / .65);
+  --glass-edge: rgb(0 0 0 / .04);
+  --soft-accent: #f3edfc;
+  --card: #f4f4f6;
+  --card-hover: #ececf0;
+  --card-line: #e6e6ea;
+  --field: rgb(241 241 241 / .85);
   --sans: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   /* Own scroller reaching under the transparent status bar, so the sticky header covers it. */
   height: calc(100% + var(--status-bar, 0px));
@@ -25,8 +43,34 @@
   display: flex;
   flex-direction: column;
   color: var(--ink);
-  background: #fff;
+  background: var(--bg);
 }
+/* Dark theme from Figma (node 148:68817). */
+:global([data-theme='dark']) .screen {
+  --ink: #efeff5;
+  --bg: #000;
+  --bg-rgb: 0 0 0;
+  --strong: #fff;
+  --muted-text: #9b9bb0;
+  --time: rgb(235 235 245 / .6);
+  --separator: #1a1a1a;
+  --hover: #0e0e10;
+  --selected: #121212;
+  --folder-active: #fff;
+  --mark-bg: rgb(120 120 128 / .36);
+  --count-muted: rgb(120 120 128 / .32);
+  --glass-bg: rgb(44 44 48 / .62);
+  --glass-edge: rgb(255 255 255 / .14);
+  --soft-accent: rgb(151 87 233 / .2);
+  --card: #1c1c1e;
+  --card-hover: #262628;
+  --card-line: #2c2c2e;
+  --field: rgb(118 118 128 / .24);
+}
+/* Black line icons turn light in the dark theme. */
+:global([data-theme='dark']) .iconButton img,
+:global([data-theme='dark']) .search img,
+:global([data-theme='dark']) .name img[alt='Без звука'] { filter: invert(.94); }
 
 .screen :where(button) {
   padding: 0;
@@ -44,10 +88,10 @@
 /* Frosted pill used by folders and tab bar. */
 .glass {
   border-radius: 296px;
-  background: rgb(255 255 255 / .65);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px) saturate(1.4);
   -webkit-backdrop-filter: blur(12px) saturate(1.4);
-  box-shadow: 0 8px 40px rgb(0 0 0 / .12), inset 0 0 0 .5px rgb(0 0 0 / .04);
+  box-shadow: 0 8px 40px rgb(0 0 0 / .12), inset 0 0 0 .5px var(--glass-edge);
 }
 
 /* ---------- Header ---------- */
@@ -64,7 +108,7 @@
   position: absolute;
   inset: 0 0 10px;
   z-index: -1;
-  background: linear-gradient(#fff 30%, rgb(255 255 255 / 0));
+  background: linear-gradient(var(--bg) 30%, rgb(var(--bg-rgb) / 0));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   mask-image: linear-gradient(#000 60%, transparent);
@@ -100,7 +144,7 @@
   overflow: hidden;
   overflow-x: auto;
   scrollbar-width: none;
-  background: #fff;
+  background: var(--bg);
   transition: padding .3s ease;
 }
 .storyRowOpen .storyRowInner { padding: 8px 12px; }
@@ -135,7 +179,7 @@
   bottom: 4px;
   width: 18px;
   height: 18px;
-  border: 1.5px solid #fff;
+  border: 1.5px solid var(--bg);
   border-radius: 50%;
   background: var(--accent);
   color: #fff;
@@ -165,22 +209,22 @@
   padding: 0 16px;
   border-radius: 20px;
   font: 500 14px/20px var(--sans);
-  color: #000;
+  color: var(--strong);
 }
 .folder[aria-pressed='true'] {
-  background: #eee;
-  color: #7e2ee6;
+  background: var(--selected);
+  color: var(--folder-active);
 }
 .mark {
   min-width: 18px;
   height: 18px;
   padding: 0 4px;
   border-radius: 23px;
-  background: rgb(120 120 120 / .2);
+  background: var(--mark-bg);
   font-size: 13px;
   line-height: 18px;
   letter-spacing: -.08px;
-  color: #000;
+  color: var(--strong);
 }
 .mark.accent { background: var(--accent); color: #fff; }
 
@@ -193,7 +237,7 @@
   list-style: none;
 }
 .list li + li { margin-top: 8px; }
-.list li + li .content { border-top-color: #e6e6e6; }
+.list li + li .content { border-top-color: var(--separator); }
 
 .row {
   height: 78px;
@@ -202,7 +246,7 @@
   color: inherit;
   text-decoration: none;
 }
-.row:hover { background: #f7f7f8; }
+.row:hover { background: var(--hover); }
 .rowItem { position: relative; }
 .avatarStory {
   position: absolute;
@@ -277,7 +321,7 @@
   font-size: 15px;
   line-height: 20px;
   letter-spacing: -.23px;
-  color: #000;
+  color: var(--strong);
 }
 .message {
   margin: 0;
@@ -287,7 +331,7 @@
   line-clamp: 2;
   overflow: hidden;
   font: 454 15px/20px var(--sans);
-  color: #808093;
+  color: var(--muted-text);
 }
 .message.oneLine { -webkit-line-clamp: 1; line-clamp: 1; }
 
@@ -306,7 +350,7 @@
   font-size: 14px;
   line-height: 20px;
   letter-spacing: -.23px;
-  color: rgb(60 60 67 / .6);
+  color: var(--time);
 }
 .count {
   min-width: 20px;
@@ -320,7 +364,7 @@
   letter-spacing: -.23px;
   text-align: center;
 }
-.count.countMuted { background: rgb(120 120 128 / .16); color: #000; }
+.count.countMuted { background: var(--count-muted); color: var(--strong); }
 
 /* ---------- Tab bar ---------- */
 
@@ -341,7 +385,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(rgb(255 255 255 / 0), #fff 70%);
+  background: linear-gradient(rgb(var(--bg-rgb) / 0), var(--bg) 70%);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   mask-image: linear-gradient(transparent, #000 40%);
@@ -362,7 +406,7 @@
   border-radius: 100px;
 }
 .tab + .tab { margin-left: -12px; }
-.tab[aria-current='page'] { background: #eee; }
+.tab[aria-current='page'] { background: var(--selected); }
 /* Icon tinted through a mask, so the active tab turns purple. */
 .tabIcon {
   width: 24px;
@@ -383,12 +427,6 @@
 /* ---------- Contacts, calls, profile ---------- */
 
 .grow { flex: 1; }
-.textButton {
-  padding: 0 8px;
-  height: 36px;
-  font: 500 16px/20px var(--sans);
-  color: var(--accent);
-}
 .visuallyHidden {
   position: absolute;
   width: 1px;
@@ -408,7 +446,7 @@
   text-align: left;
   text-decoration: none;
 }
-a.compactRow:hover, button.compactRow:hover { background: #f7f7f8; }
+a.compactRow:hover, button.compactRow:hover { background: var(--hover); }
 .compactText {
   flex: 1;
   min-width: 0;
@@ -418,14 +456,14 @@ a.compactRow:hover, button.compactRow:hover { background: #f7f7f8; }
 .status {
   margin: 0;
   font: 454 14px/18px var(--sans);
-  color: #808093;
+  color: var(--muted-text);
 }
 .status.online { color: var(--accent); }
 .missed { color: #ff383c; }
 .letter {
   margin: 12px 16px 2px;
   font: 600 13px/18px var(--sans);
-  color: #808093;
+  color: var(--muted-text);
 }
 .action { font: 550 17px/20px var(--sans); color: var(--accent); }
 .actionIcon {
@@ -435,7 +473,7 @@ a.compactRow:hover, button.compactRow:hover { background: #f7f7f8; }
   place-items: center;
   margin-right: 12px;
   border-radius: 50%;
-  background: #f3edfc;
+  background: var(--soft-accent);
 }
 
 .callBack {
@@ -447,52 +485,9 @@ a.compactRow:hover, button.compactRow:hover { background: #f7f7f8; }
   border-radius: 50%;
   color: var(--accent);
 }
-.callBack:hover { background: #f3edfc; }
+.callBack:hover { background: var(--soft-accent); }
 .callBack img {
   /* Tint the shared dark icon purple. */
   filter: invert(42%) sepia(62%) saturate(2400%) hue-rotate(245deg) brightness(95%);
 }
 
-.profile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px 16px 24px;
-  text-align: center;
-}
-.profile .avatar { width: 112px; height: 112px; margin: 0 0 12px; }
-.profile .withStory .photo { inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); }
-.profileName { margin: 0 0 4px; font: 700 24px/28px var(--sans); }
-.about { margin: 10px 0 0; font: 454 15px/20px var(--sans); }
-.profileActions {
-  display: flex;
-  gap: 8px;
-  margin: 18px 0 8px;
-}
-.pill {
-  height: 40px;
-  padding: 0 18px;
-  font: 500 14px/20px var(--sans);
-}
-.card {
-  width: 100%;
-  margin: 16px 0 0;
-  padding: 0;
-  list-style: none;
-  border-radius: 20px;
-  background: #f4f4f6;
-  overflow: hidden;
-}
-.card li + li { border-top: 1px solid #e6e6ea; }
-.cardRow {
-  width: 100%;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  font: 454 16px/20px var(--sans);
-  text-align: left;
-}
-.cardRow:hover { background: #ececf0; }
-.cardValue { color: #808093; }

@@ -3,7 +3,8 @@ import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
 import { chats, folders, storyUsers, type Chat, type FolderId, type StoryUser } from './chats'
 import { Avatar } from './Avatar'
-import { CallsTab, ContactsTab, ProfileTab } from './tabs'
+import { CallsTab, ContactsTab } from './tabs'
+import { MyProfile } from './MyProfile'
 import { Search } from './Search'
 import { StoryViewer } from './StoryViewer'
 import stories from './assets/stories.png'
@@ -18,6 +19,7 @@ import chatsIcon from './assets/chats.svg'
 import searchIcon from './assets/search.svg'
 import me from './assets/me.jpg'
 import { StubSheet } from './StubSheet'
+import './theme'
 import { showStub } from './stub'
 import styles from './ChatListScreen.module.css'
 
@@ -73,7 +75,7 @@ export function ChatListScreen() {
       )}
       {tab === 'contacts' && <ContactsTab />}
       {tab === 'calls' && <CallsTab />}
-      {tab === 'profile' && <ProfileTab />}
+      {tab === 'profile' && <MyProfile />}
 
       <nav className={styles.tabBar} aria-label="Разделы">
         <div className={`${styles.tabs} ${styles.glass}`}>

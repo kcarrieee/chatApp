@@ -22,6 +22,7 @@ import { StubSheet } from '../chat-list/StubSheet'
 import { showStub } from '../chat-list/stub'
 import { products, scripts, type Product, type ProductId } from './conversations'
 import { hash, playMelody, seconds, waveform } from './melody'
+import '../chat-list/theme'
 import styles from './ChatScreen.module.css'
 
 type Reaction = { emoji: string; avatar: string }

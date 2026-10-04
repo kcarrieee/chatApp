@@ -3,9 +3,8 @@ import { useState, type ReactNode } from 'react'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
 import { Avatar } from './Avatar'
-import { calls, contacts, me, type Call } from './chats'
+import { calls, contacts, type Call } from './chats'
 import callsIcon from './assets/calls.svg'
-import meFull from './assets/me.jpg'
 import { showStub } from './stub'
 import styles from './ChatListScreen.module.css'
 
@@ -118,45 +117,6 @@ export function CallsTab() {
           </li>
         ))}
       </ul>
-    </>
-  )
-}
-
-const settings = [
-  [['Мои истории', '3'], ['Избранное', ''], ['Архив чатов', '12']],
-  [['Уведомления и звуки', ''], ['Конфиденциальность', ''], ['Оформление', 'Светлое'], ['Данные и память', '1,2 ГБ']],
-  [['Помощь', ''], ['О приложении', 'Concept']],
-]
-
-export function ProfileTab() {
-  return (
-    <>
-      <Header title="Профиль">
-        <button type="button" onClick={() => showStub()} className={styles.textButton}>Изменить</button>
-      </Header>
-      <div className={`${styles.list} ${styles.profile}`}>
-        <Avatar person={{ name: me.name, avatar: meFull, stories: 1 }} />
-        <h2 className={styles.profileName}>{me.name}</h2>
-        <p className={styles.status}>{me.phone} · {me.username}</p>
-        <p className={styles.about}>{me.about}</p>
-        <div className={styles.profileActions}>
-          {['Фото', 'История', 'QR-код'].map((label) => (
-            <button key={label} type="button" onClick={() => showStub()} className={`${styles.pill} ${styles.glass}`}>{label}</button>
-          ))}
-        </div>
-        {settings.map((group, i) => (
-          <ul key={i} className={styles.card}>
-            {group.map(([label, value]) => (
-              <li key={label}>
-                <button type="button" onClick={() => showStub()} className={styles.cardRow}>
-                  <span>{label}</span>
-                  <span className={styles.cardValue}>{value} ›</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ))}
-      </div>
     </>
   )
 }

@@ -1,0 +1,7 @@
+/* Phone chrome in the dark theme: black screen, light status bar and home indicator. */
+[data-theme='dark'] .phone-screen { background: #000; color: #efeff5; }
+[data-theme='dark'] .status-levels { filter: invert(1); }
+[data-theme='dark'] .home-indicator::after { background: #efeff5; }
+@media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
+  [data-theme='dark'] .prototype-workspace { background: #000; }
+}
