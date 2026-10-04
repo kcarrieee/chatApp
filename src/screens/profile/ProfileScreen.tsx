@@ -4,6 +4,8 @@ import { routes } from '../../navigation/routes'
 import { demoContact } from '../../data/demoContact'
 import { initials } from '../chat-list/chats'
 import { profileOf } from '../../data/profiles'
+import { StubSheet } from '../chat-list/StubSheet'
+import { showStub } from '../chat-list/stub'
 import styles from './ProfileScreen.module.css'
 
 const assets = `${import.meta.env.BASE_URL}assets/profile/`
@@ -85,8 +87,8 @@ export function ProfileScreen() {
           <Icon name="back" /><span className={styles.srOnly}>Назад в чат</span>
         </ScreenLink>
         <div className={styles.toolbarActions}>
-          <button className={styles.toolbarButton} type="button" disabled aria-label="QR-код — пока недоступно"><Icon name="qr" /></button>
-          <button className={styles.toolbarButton} type="button" disabled aria-label="Меню — пока недоступно"><Icon name="menu" /></button>
+          <button className={styles.toolbarButton} type="button" aria-label="QR-код" onClick={() => showStub()}><Icon name="qr" /></button>
+          <button className={styles.toolbarButton} type="button" aria-label="Меню" onClick={() => showStub()}><Icon name="menu" /></button>
         </div>
       </header>
 
@@ -107,8 +109,8 @@ export function ProfileScreen() {
           <ScreenLink to={routes.chat} id={peer.id} className={styles.action}><Icon name="chat" /><span className={styles.srOnly}>Открыть чат</span></ScreenLink>
           <ScreenLink to={routes.audioCall} id={peer.id} className={styles.action}><Icon name="phone" /><span className={styles.srOnly}>Аудиозвонок</span></ScreenLink>
           <ScreenLink to={routes.videoCall} id={peer.id} className={styles.action}><Icon name="video" /><span className={styles.srOnly}>Видеозвонок</span></ScreenLink>
-          <button className={styles.action} type="button" disabled aria-label="Отключить уведомления — пока недоступно"><Icon name="mute" /></button>
-          <button className={styles.action} type="button" disabled aria-label="Ещё — пока недоступно"><Icon name="more" /></button>
+          <button className={styles.action} type="button" aria-label="Отключить уведомления" onClick={() => showStub()}><Icon name="mute" /></button>
+          <button className={styles.action} type="button" aria-label="Ещё" onClick={() => showStub()}><Icon name="more" /></button>
         </nav>
 
         <dl className={styles.details}>
@@ -136,6 +138,7 @@ export function ProfileScreen() {
           </div>
         </section>
       </div>
+      <StubSheet />
     </section>
   )
 }

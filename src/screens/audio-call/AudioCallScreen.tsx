@@ -5,6 +5,8 @@ import { motion, useReducedMotion } from 'motion/react'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
 import { useCallSeconds, useCallSession } from './callSession'
+import { StubSheet } from '../chat-list/StubSheet'
+import { showStub } from '../chat-list/stub'
 import styles from './AudioCallScreen.module.css'
 
 const assets = `${import.meta.env.BASE_URL}assets/audio-call/`
@@ -33,7 +35,7 @@ export function AudioCallScreen({ theme = 'dark' }: { theme?: CallTheme }) {
         <ScreenLink to={routes.profile} id={peer.id} className={styles.toolbarButton}>
           <Icon name="minimize" /><span className={styles.srOnly}>Вернуться в профиль</span>
         </ScreenLink>
-        <button type="button" className={styles.toolbarButton} disabled aria-label="Смена камеры недоступна в аудиозвонке"><Icon name="switch" /></button>
+        <button type="button" className={styles.toolbarButton} aria-label="Сменить камеру" onClick={() => showStub('Камера включается в видеозвонке')}><Icon name="switch" /></button>
       </header>
 
       <div className={styles.portrait}>
@@ -70,6 +72,7 @@ export function AudioCallScreen({ theme = 'dark' }: { theme?: CallTheme }) {
         </button>
         <ScreenLink to={routes.profile} id={peer.id} className={`${styles.control} ${styles.endCall}`}><Icon name="end-call" /><span className={styles.srOnly}>Завершить звонок</span></ScreenLink>
       </nav>
+      <StubSheet />
     </section>
   )
 }

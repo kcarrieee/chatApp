@@ -7,6 +7,8 @@ import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
 import { useCamera } from './useCamera'
 import { useCallSeconds, useCallSession } from '../audio-call/callSession'
+import { StubSheet } from '../chat-list/StubSheet'
+import { showStub } from '../chat-list/stub'
 import styles from './VideoCallScreen.module.css'
 
 const assets = `${import.meta.env.BASE_URL}assets/video-call/`
@@ -72,7 +74,7 @@ export function VideoCallScreen() {
       <header className={styles.toolbar}>
         <ScreenLink to={routes.profile} id={peer.id} className={styles.toolbarButton}><Icon name="minimize" /><span className={styles.srOnly}>Вернуться в профиль</span></ScreenLink>
         <div className={styles.identity}><h1>{peer.name}</h1><p>{connected ? duration : 'Звоним…'}</p></div>
-        <button className={styles.toolbarButton} type="button" aria-label="Переключить камеру" disabled={!cameraOn} onClick={() => setFacing(facing === 'user' ? 'environment' : 'user')}><Icon name="switch" /></button>
+        <button className={styles.toolbarButton} type="button" aria-label="Переключить камеру" onClick={() => cameraOn ? setFacing(facing === 'user' ? 'environment' : 'user') : showStub('Сначала включите камеру')}><Icon name="switch" /></button>
       </header>
       <button className={styles.effectsToggle} type="button" aria-label="Эффекты" aria-expanded={effectsOpen} aria-controls="call-effects" onClick={() => setEffectsOpen(!effectsOpen)}><img src={`${assets}effects.svg`} alt="" /></button>
       <div className={styles.selfView} aria-label="Ваша камера">
@@ -100,6 +102,7 @@ export function VideoCallScreen() {
         <button type="button" className={`${styles.control} ${styles.microphone}`} aria-label="Выключить микрофон" aria-pressed={muted} onClick={() => setMuted(!muted)}><Icon name="microphone" />{muted && <span className={styles.mutedSlash} aria-hidden="true" />}</button>
         <ScreenLink to={routes.profile} id={peer.id} className={`${styles.control} ${styles.endCall}`}><Icon name="end-call" /><span className={styles.srOnly}>Завершить звонок</span></ScreenLink>
       </nav>
+      <StubSheet />
     </section>
   )
 }
