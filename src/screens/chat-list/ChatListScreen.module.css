@@ -249,11 +249,11 @@
   padding: 0;
   list-style: none;
 }
-.list li + li { margin-top: 8px; }
 .list li + li .content { border-top-color: var(--separator); }
 
 .row {
-  height: 78px;
+  /* The 8px gap between chats lives inside the row, so hover reaches the next divider. */
+  height: 86px;
   display: flex;
   padding: 0 16px 0 10px;
   color: inherit;
@@ -315,7 +315,7 @@
   min-width: 0;
   display: flex;
   gap: 6px;
-  padding: 6px 0 15px;
+  padding: 6px 0 23px;
   border-top: 1px solid transparent;
 }
 .main { flex: 1; min-width: 0; }
