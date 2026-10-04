@@ -1,4 +1,7 @@
 import { usePeer } from '../../data/usePeer'
+import { demoContact } from '../../data/demoContact'
+import { profileOf } from '../../data/profiles'
+import { initials } from '../chat-list/chats'
 import { useEffect, useRef, useState } from 'react'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
@@ -49,11 +52,25 @@ export function VideoCallScreen() {
   }, [effectsOpen])
   const duration = `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`
   const remote = !effectsOpen ? 'remote' : effect === 2 ? 'bubble-portrait' : effects[effect].image
+  // The Figma video belongs to the demo contact; others show their own photo or a camera-off state.
+  const isDemoContact = peer.id === demoContact.id
+  const photo = isDemoContact ? `${assets}${remote}.webp` : profileOf(peer.id).photo
 
   return (
     <section className={styles.screen} data-effects={effectsOpen} aria-label={`Видеозвонок: ${peer.name}`}>
-      <img className={styles.remote} src={`${assets}${remote}.webp`} alt="Фото собеседницы" draggable={false} />
-      {effectsOpen && effect === 2 && <div className={styles.bubble} aria-hidden="true">
+      {photo
+        ? <img className={styles.remote} src={photo} alt={`Видео: ${peer.name}`} draggable={false} />
+        : (
+          <div className={styles.peerCameraOff} role="img" aria-label={`${peer.name}: камера выключена`}
+            style={{ background: 'color' in peer ? peer.color : undefined }}>
+            {peer.avatar && <img className={styles.peerBlur} src={peer.avatar} alt="" />}
+            <span className={styles.peerAvatar}>
+              {peer.avatar ? <img src={peer.avatar} alt="" /> : initials(peer.name)}
+            </span>
+            <span className={styles.peerCameraText}>Камера выключена</span>
+          </div>
+        )}
+      {isDemoContact && effectsOpen && effect === 2 && <div className={styles.bubble} aria-hidden="true">
         <img className={styles.bubbleGlow} src={`${assets}bubble-glow.webp`} alt="" />
         <img src={`${assets}bubble.webp`} alt="" />
       </div>}

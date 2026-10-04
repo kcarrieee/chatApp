@@ -2,7 +2,8 @@ import { usePeer } from '../../data/usePeer'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
 import { demoContact } from '../../data/demoContact'
-import { contacts, initials } from '../chat-list/chats'
+import { initials } from '../chat-list/chats'
+import { profileOf } from '../../data/profiles'
 import styles from './ProfileScreen.module.css'
 
 const assets = `${import.meta.env.BASE_URL}assets/profile/`
@@ -10,6 +11,14 @@ const assets = `${import.meta.env.BASE_URL}assets/profile/`
 function Icon({ name }: { name: string }) {
   return <img src={`${assets}${name}.svg`} alt="" draggable={false} />
 }
+
+const NAME_SIZE = 58.1232
+
+const demoDetails = [
+  { label: 'Телефон', value: '+7 928 989-11-22', accent: true },
+  { label: 'Имя пользователя', value: '@alyo_artist', accent: true },
+  { label: 'День рождения', value: '23 сентября' },
+]
 
 const publications = [
   { image: 'post-1', description: 'Татьяна рядом с металлической скульптурой', views: '344', likes: '78' },
@@ -20,8 +29,13 @@ const publications = [
 
 export function ProfileScreen() {
   const peer = usePeer()
-  const status = contacts.find(contact => contact.id === peer.id)?.status ?? demoContact.status
   const isDemoContact = peer.id === demoContact.id
+  const profile = profileOf(peer.id)
+  const status = isDemoContact ? demoContact.status : profile.status
+  const details = isDemoContact ? demoDetails : profile.details
+  const posts = isDemoContact ? publications.map((post) => ({ ...post, image: `${assets}${post.image}.svg` })) : profile.posts
+  // Long names (groups, channels) shrink to stay on one line under the avatar.
+  const nameSize = Math.min(NAME_SIZE, 300 / (0.6 * peer.name.length))
   const screenRef = useRef<HTMLElement>(null)
   const headerRef = useRef<HTMLElement>(null)
   const nameRef = useRef<HTMLHeadingElement>(null)
@@ -40,7 +54,7 @@ export function ProfileScreen() {
       const remaining = Math.max(0, travel - Math.max(0, scroller.scrollTop))
       const progress = travel > 0 ? 1 - remaining / travel : 0
       header.style.setProperty('--title-offset', `${remaining}px`)
-      header.style.setProperty('--title-scale', `${1 - progress * (1 - 20 / 58.1232)}`)
+      header.style.setProperty('--title-scale', `${1 - progress * (1 - 20 / nameSize)}`)
       header.style.setProperty('--collapse', `${Math.min(1, progress * 2)}`)
     }
     const measure = () => {
@@ -60,10 +74,11 @@ export function ProfileScreen() {
       scroller.removeEventListener('scroll', onScroll)
       cancelAnimationFrame(frame)
     }
-  }, [])
+  }, [nameSize])
 
   return (
-    <section ref={screenRef} className={styles.screen} aria-label={`Профиль: ${peer.name}`}>
+    <section ref={screenRef} className={styles.screen} aria-label={`Профиль: ${peer.name}`}
+      style={{ '--name-size': nameSize } as CSSProperties}>
       <header ref={headerRef} className={styles.toolbar}>
         <span className={styles.headerName} aria-hidden="true">{peer.name}</span>
         <ScreenLink to={routes.chat} id={peer.id} className={styles.toolbarButton}>
@@ -97,9 +112,9 @@ export function ProfileScreen() {
         </nav>
 
         <dl className={styles.details}>
-          <div><dt>Телефон</dt><dd className={styles.accent}>+7 928 989-11-22</dd></div>
-          <div><dt>Имя пользователя</dt><dd className={styles.accent}>@alyo_artist</dd></div>
-          <div><dt>День рождения</dt><dd>23 сентября</dd></div>
+          {details.map((detail) => (
+            <div key={detail.label}><dt>{detail.label}</dt><dd className={detail.accent ? styles.accent : undefined}>{detail.value}</dd></div>
+          ))}
         </dl>
 
         <section className={styles.publications} aria-label="Публикации">
@@ -107,10 +122,11 @@ export function ProfileScreen() {
             <span className={styles.selected}>Публикации</span>
             <span>Медиа</span><span>Файлы</span><span>Ссылки</span>
           </div>
+          {posts.length === 0 && <p className={styles.emptyPosts}>Публикаций пока нет</p>}
           <div className={styles.grid}>
-            {publications.map((post) => (
+            {posts.map((post) => (
               <article className={styles.post} key={post.image}>
-                <img className={styles.postImage} src={`${assets}${post.image}.svg`} alt={post.description} loading="lazy" draggable={false} />
+                <img className={styles.postImage} src={post.image} alt={post.description} loading="lazy" draggable={false} />
                 <div className={styles.statistics}>
                   <span aria-label={`${post.views} просмотров`}><Icon name="eye" />{post.views}</span>
                   <span aria-label={`${post.likes} отметок нравится`}><Icon name="heart" />{post.likes}</span>
@@ -123,4 +139,4 @@ export function ProfileScreen() {
     </section>
   )
 }
-import { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef, type CSSProperties } from 'react'

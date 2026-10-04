@@ -78,8 +78,9 @@
   width: 100%;
   text-align: center;
   font-family: 'Profile WB Sans', sans-serif;
-  font-size: calc(58.1232 * var(--u));
+  font-size: calc(var(--name-size, 58.1232) * var(--u));
   line-height: calc(70 * var(--u));
+  white-space: nowrap;
   transform: translateY(calc(-50% + var(--title-offset, 225.685 * var(--u)))) scale(var(--title-scale, 1));
   transform-origin: center;
   pointer-events: none;
@@ -114,7 +115,8 @@
   opacity: 0;
   margin: 0;
   font-family: 'Profile WB Sans', sans-serif;
-  font-size: calc(58.1232 * var(--u));
+  font-size: calc(var(--name-size, 58.1232) * var(--u));
+  white-space: nowrap;
   font-weight: 400;
   line-height: calc(70 * var(--u));
 }
@@ -174,7 +176,7 @@
   margin: calc(8.61 * var(--u)) calc(3.229 * var(--u)) 0;
 }
 .post { position: relative; overflow: hidden; aspect-ratio: 177.06 / 251.867; border-radius: calc(21.5271 * var(--u)); }
-.postImage { display: block; width: 100%; height: auto; }
+.postImage { display: block; width: 100%; height: 100%; object-fit: cover; }
 .statistics {
   position: absolute;
   inset: auto 0 0;
@@ -203,3 +205,10 @@
 
 .peerAvatar { width: calc(145 * var(--u)); height: calc(145 * var(--u)); margin: 0 auto; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: #9757e9; color: #fff; font-size: calc(48 * var(--u)); }
 .peerAvatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.emptyPosts {
+  margin: calc(24 * var(--u)) 0;
+  text-align: center;
+  color: rgb(255 255 255 / 50%);
+  font-size: calc(15 * var(--u));
+}
