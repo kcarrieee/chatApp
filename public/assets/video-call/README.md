@@ -1,0 +1,1 @@
+Original image fills and effects icon exported from Figma Portfolio-site, node 945:39764. Photos compressed to WebP; bubble layers retain transparency. The local camera replaces the placeholder self-view. Effects are visual prototype states, not live face tracking.

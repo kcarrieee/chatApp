@@ -1,8 +1,205 @@
-.screen { min-height: 100%; padding: 28px 24px; color: #242128; background: #fff; }
-.eyebrow { margin: 0 0 10px; color: #8a8490; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
-.title { margin: 0 0 14px; font-size: 28px; line-height: 1.15; letter-spacing: -.6px; }
-.description { margin: 0 0 30px; color: #77717e; font-size: 15px; line-height: 1.5; }
-.actions { display: grid; gap: 12px; }
-.link { display: block; padding: 16px; border-radius: 14px; background: #f4f1f7; color: #6926a2; text-decoration: none; font-size: 15px; line-height: 1.4; }
-.link:hover { background: #ebe4f3; }
-.link:focus-visible { outline: 2px solid #6926a2; outline-offset: 3px; }
+@font-face {
+  font-family: 'Profile Google Sans';
+  src: url('/assets/profile/fonts/google-sans.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Profile WB Sans';
+  src: url('/assets/profile/fonts/wb-sans.otf') format('opentype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Profile ALS Hauss';
+  src: url('/assets/profile/fonts/als-hauss.ttf') format('truetype');
+  font-display: swap;
+}
+
+/* The profile owns its dark chrome; other screens retain the shared light shell. */
+:global(.phone-screen):has(.screen) {
+  background: #000;
+  color: #efeff5;
+}
+:global(.phone-screen):has(.screen) :global(.status-bar) {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 4;
+  background: transparent;
+  pointer-events: none;
+}
+:global(.phone-screen):has(.screen) :global(.status-levels) { filter: invert(1); }
+:global(.phone-screen):has(.screen) :global(.home-indicator) {
+  position: absolute;
+  inset: auto 0 0;
+  background: transparent;
+  pointer-events: none;
+}
+:global(.phone-screen):has(.screen) :global(.home-indicator)::after { background: #efeff5; }
+/* The profile toolbar already includes the status-bar space. */
+:global(.phone-content):has(.screen) { padding-top: 0; scrollbar-width: none; }
+:global(.phone-content):has(.screen)::-webkit-scrollbar { display: none; }
+
+.screen {
+  --u: calc(100cqw / 403.633);
+  --status-height: 15.5cqw;
+  --toolbar-height: calc(56.26 * var(--u));
+  --toolbar-top: 0px;
+  min-height: 100%;
+  padding-bottom: calc(42 * var(--u));
+  color: #efeff5;
+  font-family: 'Profile Google Sans', 'Profile ALS Hauss', sans-serif;
+  background: #000 url('/assets/profile/background.svg') center top / 100% auto no-repeat;
+}
+.toolbar {
+  --collapse: 0;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: calc(var(--status-height) + var(--toolbar-height));
+  padding: calc(var(--status-height) + var(--toolbar-top)) calc(17.22 * var(--u)) calc(8.61 * var(--u));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.toolbar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(16 16 20 / 18%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  opacity: var(--collapse);
+  pointer-events: none;
+}
+.headerName {
+  position: absolute;
+  top: calc(var(--status-height) + (var(--toolbar-height) + var(--toolbar-top) - 8.61 * var(--u)) / 2);
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-family: 'Profile WB Sans', sans-serif;
+  font-size: calc(58.1232 * var(--u));
+  line-height: calc(70 * var(--u));
+  transform: translateY(calc(-50% + var(--title-offset, 225.685 * var(--u)))) scale(var(--title-scale, 1));
+  transform-origin: center;
+  pointer-events: none;
+  will-change: transform;
+}
+.toolbarActions { display: flex; align-items: center; gap: calc(17.22 * var(--u)); }
+.toolbarButton {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  width: calc(28.81 * var(--u));
+  height: calc(36 * var(--u));
+  border: 0;
+  background: none;
+  color: inherit;
+}
+.toolbarButton img { width: calc(28.81 * var(--u)); height: auto; }
+.toolbarButton:first-child img[src$='back.svg'], .toolbarButton img[src$='menu.svg'] { width: calc(25.83 * var(--u)); }
+.content { padding: 0 calc(17.22 * var(--u)); }
+.identity { text-align: center; }
+.portrait { position: relative; height: calc(158.38 * var(--u)); }
+.portrait > img {
+  position: absolute;
+  left: calc((90 - 17.22) * var(--u));
+  top: calc((85 - 118.26) * var(--u));
+  width: calc(275 * var(--u));
+  height: calc(190 * var(--u));
+  max-width: none;
+}
+.name {
+  opacity: 0;
+  margin: 0;
+  font-family: 'Profile WB Sans', sans-serif;
+  font-size: calc(58.1232 * var(--u));
+  font-weight: 400;
+  line-height: calc(70 * var(--u));
+}
+.status {
+  margin: calc(-4.305 * var(--u)) 0 0;
+  color: rgb(255 255 255 / 50%);
+  font-size: calc(17.2217 * var(--u));
+  line-height: calc(22 * var(--u));
+}
+.actions { display: flex; justify-content: space-between; margin-top: calc(24 * var(--u)); }
+.action {
+  display: grid;
+  place-items: center;
+  width: calc(64.5813 * var(--u));
+  height: calc(64.5813 * var(--u));
+  padding: 0;
+  border: 0;
+  border-radius: calc(21.5271 * var(--u));
+  background: rgb(255 255 255 / 5%);
+  color: #fff;
+}
+.action img { width: calc(28.8132 * var(--u)); height: auto; }
+.action:disabled, .toolbarButton:disabled { opacity: 1; cursor: default; }
+.action[href]:hover { background: rgb(255 255 255 / 12%); }
+.action[href]:active { background: rgb(255 255 255 / 18%); }
+.screen a:focus-visible { outline: 2px solid #f3bcff; outline-offset: 3px; }
+.details {
+  margin: calc(21.5271 * var(--u)) 0 0;
+  overflow: hidden;
+  border-radius: calc(17.2217 * var(--u));
+  background: #242429;
+  font-family: 'Profile ALS Hauss', sans-serif;
+}
+.details > div { min-height: calc(69.833 * var(--u)); padding: calc(12.916 * var(--u)) calc(17.2217 * var(--u)); }
+.details > div + div { border-top: calc(1.07635 * var(--u)) solid rgb(119 119 136 / 20%); }
+.details dt { color: #9b9bb0; font-size: calc(15.069 * var(--u)); line-height: calc(22 * var(--u)); }
+.details dd { margin: 0; font-size: calc(17.2217 * var(--u)); line-height: calc(22 * var(--u)); }
+.accent { color: #0daef2; }
+.publications { margin-top: calc(17.2217 * var(--u)); }
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(365.96 * var(--u));
+  height: calc(38.749 * var(--u));
+  padding: calc(2.1527 * var(--u));
+  border-radius: calc(107.635 * var(--u));
+  background: #242429;
+  white-space: nowrap;
+}
+.tabs > span { font-family: 'Profile ALS Hauss', sans-serif; padding: calc(6.458 * var(--u)) calc(14 * var(--u)); font-size: calc(15.069 * var(--u)); line-height: calc(22 * var(--u)); }
+.tabs > .selected { font-family: 'Profile Google Sans', sans-serif; background: #2f2f37; border-radius: inherit; font-size: calc(17.22 * var(--u)); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(8.61 * var(--u));
+  margin: calc(8.61 * var(--u)) calc(3.229 * var(--u)) 0;
+}
+.post { position: relative; overflow: hidden; aspect-ratio: 177.06 / 251.867; border-radius: calc(21.5271 * var(--u)); }
+.postImage { display: block; width: 100%; height: auto; }
+.statistics {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  align-items: flex-end;
+  gap: calc(8.61 * var(--u));
+  height: calc(88.261 * var(--u));
+  padding: 0 calc(12.916 * var(--u)) calc(8.61 * var(--u));
+  background: linear-gradient(transparent, rgb(0 0 0 / 60%));
+  color: #fff;
+  font-size: calc(15.069 * var(--u));
+  line-height: calc(22 * var(--u));
+}
+.statistics > span { display: flex; gap: calc(4.305 * var(--u)); align-items: center; white-space: nowrap; }
+.statistics img { width: calc(17.2217 * var(--u)); height: auto; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+@media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
+  .screen {
+    --status-height: 0px;
+    --toolbar-height: calc(64 * var(--u));
+    --toolbar-top: calc(8 * var(--u));
+    background-position: center calc(-54.26 * var(--u));
+  }
+}
+
+.peerAvatar { width: calc(145 * var(--u)); height: calc(145 * var(--u)); margin: 0 auto; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: #9757e9; color: #fff; font-size: calc(48 * var(--u)); }
+.peerAvatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
