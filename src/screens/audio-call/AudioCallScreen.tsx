@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
+import { useCallSounds } from './useCallSounds'
 import styles from './AudioCallScreen.module.css'
 
 const assets = `${import.meta.env.BASE_URL}assets/audio-call/`
@@ -34,6 +35,7 @@ export function AudioCallScreen({ theme = 'dark' }: { theme?: CallTheme }) {
   }, [connectedAt])
 
   const connected = connectedAt !== null
+  useCallSounds(connected)
   const duration = `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`
 
   return (

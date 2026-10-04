@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { routes } from '../../navigation/routes'
 import { useCamera } from './useCamera'
+import { useCallSounds } from '../audio-call/useCallSounds'
 import styles from './VideoCallScreen.module.css'
 
 const assets = `${import.meta.env.BASE_URL}assets/video-call/`
@@ -34,6 +35,7 @@ export function VideoCallScreen() {
   const [seconds, setSeconds] = useState(0)
   const [connected, setConnected] = useState(false)
   const carousel = useRef<HTMLDivElement>(null)
+  useCallSounds(connected)
 
   useEffect(() => {
     const start = Date.now() + 3000
