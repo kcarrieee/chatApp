@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent, type ReactNode } from 'react'
+import { motion, MotionConfig } from 'motion/react'
+import { softSpring } from '../chat-list/springs'
 import { ScreenLink } from '../../navigation/ScreenLink'
 import { readRouteId, routes } from '../../navigation/routes'
 import { chats, contacts, initials, type Chat } from '../chat-list/chats'
@@ -23,6 +25,7 @@ import { showStub } from '../chat-list/stub'
 import { products, scripts, type Product, type ProductId } from './conversations'
 import { hash, playMelody, seconds, waveform } from './melody'
 import '../chat-list/theme'
+import { TextMorph } from 'torph/react'
 import styles from './ChatScreen.module.css'
 
 type Reaction = { emoji: string; avatar: string }
@@ -76,7 +79,8 @@ export function ChatScreen() {
   // Opened from the chat list or contacts as #/chat?id=…; Alisa from Figma by default.
   const id = useSyncExternalStore(subscribe, readRouteId) ?? 'alisa'
   // A new id starts a fresh conversation state.
-  return <Conversation key={id} id={id} />
+  // Respect the system "reduce motion" setting for every motion component inside.
+  return <MotionConfig reducedMotion="user"><Conversation key={id} id={id} /></MotionConfig>
 }
 
 function Conversation({ id }: { id: string }) {
@@ -91,6 +95,8 @@ function Conversation({ id }: { id: string }) {
   const [recorded, setRecorded] = useState(0)
   const screen = useRef<HTMLElement>(null)
   const list = useRef<HTMLOListElement>(null)
+  // Messages present on open stay still; only ones sent afterwards animate in.
+  const [initialIds] = useState(() => new Set(messages.map((message) => message.id)))
 
   // Stay at the newest message, also when images and fonts load and grow the list.
   useEffect(() => {
@@ -157,7 +163,7 @@ function Conversation({ id }: { id: string }) {
 
       <ol ref={list} className={styles.messages}>
         {messages.length === 0 && <li className={styles.empty}>Здесь пока пусто — напишите первым 👋</li>}
-        {messages.map((message) => <MessageRow key={message.id} message={message} />)}
+        {messages.map((message) => <MessageRow key={message.id} message={message} fresh={!initialIds.has(message.id)} />)}
       </ol>
 
       <form className={styles.composer} onSubmit={send}>
@@ -179,7 +185,7 @@ function Conversation({ id }: { id: string }) {
             </button>
             <div className={`${styles.field} ${styles.glass} ${styles.recording}`} role="status">
               <i className={styles.recDot} />
-              {clock(recorded)}
+              <TextMorph as="span">{clock(recorded)}</TextMorph>
               <span className={styles.recHint}>Запись голосового…</span>
             </div>
           </>
@@ -201,33 +207,44 @@ function Conversation({ id }: { id: string }) {
   )
 }
 
-function MessageRow({ message }: { message: Message }) {
+/** A new message springs out of its bubble corner; the history renders as plain rows. */
+function Row({ fresh, out, className, children }: { fresh: boolean; out?: boolean; className: string; children: ReactNode }) {
+  if (!fresh) return <li className={className}>{children}</li>
+  return (
+    <motion.li className={className} style={{ transformOrigin: out ? '100% 100%' : '0 100%' }}
+      initial={{ opacity: 0, y: 18, scale: 0.92 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={softSpring}>
+      {children}
+    </motion.li>
+  )
+}
+
+function MessageRow({ message, fresh }: { message: Message; fresh: boolean }) {
   const side = message.out ? styles.out : styles.in
 
   if (message.kind === 'sticker') {
     return (
-      <li className={`${styles.row} ${side}`}>
+      <Row fresh={fresh} out={message.out} className={`${styles.row} ${side}`}>
         <div className={styles.sticker}>
           <img src={sticker} alt="Стикер: мишка шлёт воздушный поцелуй" width={190} height={190} />
           <span className={styles.timeChip}>{message.time}</span>
         </div>
-      </li>
+      </Row>
     )
   }
 
   if (message.kind === 'product') {
     return (
-      <li className={`${styles.row} ${side}`}>
+      <Row fresh={fresh} out={message.out} className={`${styles.row} ${side}`}>
         <div className={`${styles.bubble} ${styles.productBubble}`}>
           <ProductCard product={products[message.product]} />
         </div>
         {message.reactions && <Reactions reactions={message.reactions} dark />}
-      </li>
+      </Row>
     )
   }
 
   return (
-    <li className={`${styles.row} ${side}`}>
+    <Row fresh={fresh} out={message.out} className={`${styles.row} ${side}`}>
       <div className={`${styles.bubble} ${message.kind === 'voice' ? styles.voiceBubble : ''}`}>
         {message.sender && !message.out && <div className={styles.sender}>{message.sender}</div>}
         {message.kind === 'text' && <p className={styles.text}>{message.text}<span className={styles.spacer} /></p>}
@@ -238,7 +255,7 @@ function MessageRow({ message }: { message: Message }) {
           {message.read && <img src={readIcon} alt="Прочитано" width={14} height={8} />}
         </span>
       </div>
-    </li>
+    </Row>
   )
 }
 
@@ -304,7 +321,9 @@ function Voice({ duration, seed }: { duration: string; seed: number }) {
     const started = performance.now()
     let frame = 0
     const tick = () => {
-      setProgress(Math.min(1, (performance.now() - started) / 1000 / length))
+      // Quantized to waveform bars: re-render ~6 times a second instead of every frame.
+      const bars = 86
+      setProgress(Math.round(Math.min(1, (performance.now() - started) / 1000 / length) * bars) / bars)
       frame = requestAnimationFrame(tick)
     }
     stop.current = playMelody(seed, length, () => {
@@ -332,7 +351,7 @@ function Voice({ duration, seed }: { duration: string; seed: number }) {
         <span className={styles.wave} aria-hidden="true">
           {bars.map((height, i) => <i key={i} className={i < played ? styles.played : ''} style={{ height }} />)}
         </span>
-        <span className={styles.voiceTime}>{progress === null ? duration : clock(progress * length)}<i /></span>
+        <span className={styles.voiceTime}><TextMorph as="span">{progress === null ? duration : clock(progress * length)}</TextMorph><i /></span>
       </div>
       <button type="button" onClick={() => showStub()} className={styles.transcribe} aria-label="Расшифровать">→A</button>
     </div>

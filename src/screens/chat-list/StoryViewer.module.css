@@ -135,7 +135,5 @@
   width: 44px;
   height: 44px;
   font-size: 26px;
-  transition: transform .15s;
 }
-.like:active { transform: scale(1.25); }
 .views { font-size: 15px; color: rgb(255 255 255 / .85); }

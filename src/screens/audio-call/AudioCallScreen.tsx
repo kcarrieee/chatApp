@@ -7,6 +7,7 @@ import { routes } from '../../navigation/routes'
 import { useCallSeconds, useCallSession } from './callSession'
 import { StubSheet } from '../chat-list/StubSheet'
 import { showStub } from '../chat-list/stub'
+import { TextMorph } from 'torph/react'
 import styles from './AudioCallScreen.module.css'
 
 const assets = `${import.meta.env.BASE_URL}assets/audio-call/`
@@ -60,7 +61,7 @@ export function AudioCallScreen({ theme = 'dark' }: { theme?: CallTheme }) {
       </div>
       <div className={styles.identity}>
         <h1>{peer.name}</h1>
-        <p aria-live={connected ? 'off' : 'polite'}>{connected ? duration : 'Звоним…'}</p>
+        <p aria-live={connected ? 'off' : 'polite'}><TextMorph as="span">{connected ? duration : 'Звоним…'}</TextMorph></p>
       </div>
 
       <nav className={styles.controls} aria-label="Управление аудиозвонком">

@@ -6,6 +6,7 @@ import { Avatar } from './Avatar'
 import { calls, contacts, type Call } from './chats'
 import callsIcon from './assets/calls.svg'
 import { showStub } from './stub'
+import { SlidingPill } from './SlidingPill'
 import styles from './ChatListScreen.module.css'
 
 function Header({ title, children }: { title: string; children?: ReactNode }) {
@@ -91,8 +92,12 @@ export function CallsTab() {
           <button type="button" onClick={() => showStub()} className={styles.iconButton} aria-label="Новый звонок"><PlusIcon /></button>
         </div>
         <div className={`${styles.folders} ${styles.glass}`} role="group" aria-label="Фильтр звонков">
-          <button type="button" className={styles.folder} aria-pressed={!missedOnly} onClick={() => setMissedOnly(false)}>Все</button>
-          <button type="button" className={styles.folder} aria-pressed={missedOnly} onClick={() => setMissedOnly(true)}>Пропущенные</button>
+          <button type="button" className={styles.folder} aria-pressed={!missedOnly} onClick={() => setMissedOnly(false)}>
+            {!missedOnly && <SlidingPill group="calls-filter" className={styles.pillBg} />}Все
+          </button>
+          <button type="button" className={styles.folder} aria-pressed={missedOnly} onClick={() => setMissedOnly(true)}>
+            {missedOnly && <SlidingPill group="calls-filter" className={styles.pillBg} />}Пропущенные
+          </button>
         </div>
       </header>
       <ul className={styles.list}>

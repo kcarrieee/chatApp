@@ -21,6 +21,8 @@ import me from './assets/me.jpg'
 import { StubSheet } from './StubSheet'
 import './theme'
 import { showStub } from './stub'
+import { SlidingPill } from './SlidingPill'
+import { motion, MotionConfig } from 'motion/react'
 import styles from './ChatListScreen.module.css'
 
 type Tab = 'contacts' | 'calls' | 'chats' | 'profile'
@@ -35,6 +37,11 @@ const tabs: { id: Tab; label: string; icon: string }[] = [
 ]
 
 export function ChatListScreen() {
+  // Respect the system "reduce motion" setting for every motion component inside.
+  return <MotionConfig reducedMotion="user"><ChatListContent /></MotionConfig>
+}
+
+function ChatListContent() {
   const [tab, setTab] = useState<Tab>('chats')
   const [searching, setSearching] = useState(false)
   // Lives here, so the stories row stays open after closing the viewer.
@@ -70,12 +77,16 @@ export function ChatListScreen() {
 
   return (
     <section className={styles.screen} aria-label={tabs.find((item) => item.id === tab)?.label ?? 'Профиль'}>
-      {tab === 'chats' && (
-        <ChatsTab storiesOpen={storiesOpen} onStoriesOpen={setStoriesOpen} seen={seen} onOpenStory={(users, start) => setViewing({ users, start })} />
-      )}
-      {tab === 'contacts' && <ContactsTab />}
-      {tab === 'calls' && <CallsTab />}
-      {tab === 'profile' && <MyProfile onBack={() => setTab('chats')} />}
+      {/* Tab content fades up on switch instead of popping in. */}
+      <motion.div key={tab} className={styles.tabContent}
+        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, ease: 'easeOut' }}>
+        {tab === 'chats' && (
+          <ChatsTab storiesOpen={storiesOpen} onStoriesOpen={setStoriesOpen} seen={seen} onOpenStory={(users, start) => setViewing({ users, start })} />
+        )}
+        {tab === 'contacts' && <ContactsTab />}
+        {tab === 'calls' && <CallsTab />}
+        {tab === 'profile' && <MyProfile onBack={() => setTab('chats')} />}
+      </motion.div>
 
       <nav className={styles.tabBar} aria-label="Разделы">
         <div className={`${styles.tabs} ${styles.glass}`}>
@@ -83,12 +94,14 @@ export function ChatListScreen() {
             <button key={item.id} type="button" className={styles.tab} aria-label={item.label}
               aria-current={tab === item.id ? 'page' : undefined}
               onClick={(event) => open(item.id, event.currentTarget.closest('section'))}>
+              {tab === item.id && <SlidingPill group="tab-bar" className={styles.pillBg} />}
               <span className={styles.tabIcon} style={{ '--icon': `url("${item.icon}")` } as CSSProperties} />
             </button>
           ))}
           <button type="button" className={styles.tab} aria-label="Мой профиль"
             aria-current={tab === 'profile' ? 'page' : undefined}
             onClick={(event) => open('profile', event.currentTarget.closest('section'))}>
+            {tab === 'profile' && <SlidingPill group="tab-bar" className={styles.pillBg} />}
             <img className={styles.me} src={me} alt="" width={28} height={28} />
           </button>
         </div>
@@ -207,6 +220,7 @@ function ChatsTab({ storiesOpen, onStoriesOpen, seen, onOpenStory }: {
           {folders.map((item) => (
             <button key={item.id} type="button" aria-pressed={folder === item.id}
               className={styles.folder} onClick={() => setFolder(item.id)}>
+              {folder === item.id && <SlidingPill group="folders" className={styles.pillBg} />}
               {item.label}
               {!!item.badge && (
                 <span className={`${styles.mark} ${item.accent ? styles.accent : ''}`}>{item.badge}</span>

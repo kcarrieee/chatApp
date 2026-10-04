@@ -4,6 +4,7 @@ import { me, storyUsers } from './chats'
 import meAvatar from './assets/me.jpg'
 import { showStub } from './stub'
 import { setTheme, useThemeChoice, type ThemeChoice } from './theme'
+import { SlidingPill } from './SlidingPill'
 import styles from './MyProfile.module.css'
 
 const profileAssets = `${import.meta.env.BASE_URL}assets/profile/`
@@ -94,7 +95,10 @@ export function MyProfile({ onBack }: { onBack: () => void }) {
           <div className={styles.segmented} role="radiogroup" aria-label="Тема">
             {themes.map((item) => (
               <button key={item.id} type="button" role="radio" aria-checked={theme === item.id}
-                onClick={() => setTheme(item.id)}>{item.label}</button>
+                onClick={() => setTheme(item.id)}>
+                {theme === item.id && <SlidingPill group="theme" className={styles.pillBg} />}
+                {item.label}
+              </button>
             ))}
           </div>
         </div>

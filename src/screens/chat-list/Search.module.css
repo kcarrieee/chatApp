@@ -239,4 +239,11 @@
   font: 500 14px/18px -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--strong);
 }
-.pill button[aria-pressed='true'] { background: var(--selected); }
+.pill button { position: relative; isolation: isolate; }
+.pillBg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--selected);
+}

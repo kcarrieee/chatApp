@@ -55,7 +55,7 @@
   --time: rgb(235 235 245 / .6);
   --separator: #1a1a1a;
   --hover: #0e0e10;
-  --selected: #121212;
+  --selected: rgb(255 255 255 / .13);
   --folder-active: #fff;
   --mark-bg: rgb(120 120 128 / .36);
   --count-muted: rgb(120 120 128 / .32);
@@ -92,6 +92,13 @@
   backdrop-filter: blur(12px) saturate(1.4);
   -webkit-backdrop-filter: blur(12px) saturate(1.4);
   box-shadow: 0 8px 40px rgb(0 0 0 / .12), inset 0 0 0 .5px var(--glass-edge);
+}
+
+/* Wraps the active tab; keeps the sticky header and full-height layout working. */
+.tabContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ---------- Header ---------- */
@@ -211,9 +218,15 @@
   font: 500 14px/20px var(--sans);
   color: var(--strong);
 }
-.folder[aria-pressed='true'] {
+.folder,
+.tab { position: relative; isolation: isolate; }
+.folder[aria-pressed='true'] { color: var(--folder-active); }
+.pillBg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
   background: var(--selected);
-  color: var(--folder-active);
 }
 .mark {
   min-width: 18px;
@@ -406,7 +419,6 @@
   border-radius: 100px;
 }
 .tab + .tab { margin-left: -12px; }
-.tab[aria-current='page'] { background: var(--selected); }
 /* Icon tinted through a mask, so the active tab turns purple. */
 .tabIcon {
   width: 24px;

@@ -6,6 +6,8 @@ import { chats, contacts, type Chat, type Person } from './chats'
 import searchIcon from './assets/search.svg'
 import sticker from '../chat/assets/sticker.png'
 import product from '../chat/assets/product.png'
+import { TextMorph } from 'torph/react'
+import { SlidingPill } from './SlidingPill'
 import styles from './Search.module.css'
 
 type Category = 'chats' | 'channels' | 'posts' | 'media' | 'downloads'
@@ -166,6 +168,7 @@ export function Search({ onClose }: { onClose: () => void }) {
         <div className={styles.pill}>
           {categories.map((item) => (
             <button key={item.id} type="button" aria-pressed={category === item.id} onClick={() => setCategory(item.id)}>
+              {category === item.id && <SlidingPill group="search-categories" className={styles.pillBg} />}
               {item.label}
             </button>
           ))}
@@ -203,4 +206,5 @@ function Highlight({ text, query }: { text: string; query: string }) {
 }
 
 const Empty = ({ query }: { query: string }) => <Hint text={`По запросу «${query.trim()}» ничего не найдено`} />
-const Hint = ({ text }: { text: string }) => <p className={styles.hint}>{text}</p>
+// The empty-state text morphs letter by letter as the query is typed.
+const Hint = ({ text }: { text: string }) => <TextMorph as="p" className={styles.hint}>{text}</TextMorph>

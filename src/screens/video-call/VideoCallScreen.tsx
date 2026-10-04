@@ -9,6 +9,7 @@ import { useCamera } from './useCamera'
 import { useCallSeconds, useCallSession } from '../audio-call/callSession'
 import { StubSheet } from '../chat-list/StubSheet'
 import { showStub } from '../chat-list/stub'
+import { TextMorph } from 'torph/react'
 import styles from './VideoCallScreen.module.css'
 
 const assets = `${import.meta.env.BASE_URL}assets/video-call/`
@@ -73,7 +74,7 @@ export function VideoCallScreen() {
       </div>}
       <header className={styles.toolbar}>
         <ScreenLink to={routes.profile} id={peer.id} className={styles.toolbarButton}><Icon name="minimize" /><span className={styles.srOnly}>Вернуться в профиль</span></ScreenLink>
-        <div className={styles.identity}><h1>{peer.name}</h1><p>{connected ? duration : 'Звоним…'}</p></div>
+        <div className={styles.identity}><h1>{peer.name}</h1><p><TextMorph as="span">{connected ? duration : 'Звоним…'}</TextMorph></p></div>
         <button className={styles.toolbarButton} type="button" aria-label="Переключить камеру" onClick={() => cameraOn ? setFacing(facing === 'user' ? 'environment' : 'user') : showStub('Сначала включите камеру')}><Icon name="switch" /></button>
       </header>
       <button className={styles.effectsToggle} type="button" aria-label="Эффекты" aria-expanded={effectsOpen} aria-controls="call-effects" onClick={() => setEffectsOpen(!effectsOpen)}><img src={`${assets}effects.svg`} alt="" /></button>

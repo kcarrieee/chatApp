@@ -1,6 +1,8 @@
 // Full-screen story viewer: no mockup yet, built in the style of the chat screens.
 import { useEffect, useState } from 'react'
 import type { StoryUser } from './chats'
+import { motion } from 'motion/react'
+import { softSpring } from './springs'
 import styles from './StoryViewer.module.css'
 
 export function StoryViewer({ users, start, onSeen, onClose }: {
@@ -41,7 +43,8 @@ export function StoryViewer({ users, start, onSeen, onClose }: {
   })
 
   return (
-    <div className={`${styles.viewer} ${paused ? styles.paused : ''}`} aria-label={`История: ${user.name}`}
+    <motion.div className={`${styles.viewer} ${paused ? styles.paused : ''}`} aria-label={`История: ${user.name}`}
+      initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={softSpring}
       onPointerDown={() => setPaused(true)} onPointerUp={() => setPaused(false)} onPointerLeave={() => setPaused(false)}>
       <img key={key} className={styles.image} src={story.image} alt="" />
 
@@ -79,13 +82,19 @@ export function StoryViewer({ users, start, onSeen, onClose }: {
               onKeyDown={(event) => {
                 if (event.key === 'Enter') event.currentTarget.value = ''
               }} />
-            <button type="button" className={styles.like} aria-pressed={liked.includes(key)} aria-label="Нравится"
+            <motion.button type="button" className={styles.like} aria-pressed={liked.includes(key)} aria-label="Нравится"
+              whileTap={{ scale: 0.8 }}
               onClick={() => setLiked(liked.includes(key) ? liked.filter((item) => item !== key) : [...liked, key])}>
-              {liked.includes(key) ? '❤️' : '🤍'}
-            </button>
+              {/* The heart pops in with a spring each time it turns on. */}
+              <motion.span key={String(liked.includes(key))} style={{ display: 'inline-block' }}
+                initial={{ scale: liked.includes(key) ? 0.4 : 1 }} animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 14 }}>
+                {liked.includes(key) ? '❤️' : '🤍'}
+              </motion.span>
+            </motion.button>
           </>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }
