@@ -43,7 +43,7 @@ const EditIcon = () => (
   </svg>
 )
 
-export function MyProfile() {
+export function MyProfile({ onBack }: { onBack: () => void }) {
   const theme = useThemeChoice()
   const posts = storyUsers.find((user) => user.mine)?.stories ?? []
   // Long names shrink to stay on one line, as in the contact profile.
@@ -52,12 +52,17 @@ export function MyProfile() {
   return (
     <div className={styles.profile} style={{ '--profile-bg': `url(${profileAssets}background.svg)` } as CSSProperties}>
       <header className={styles.toolbar}>
-        <button type="button" className={styles.toolbarButton} aria-label="QR-код" onClick={() => showStub()}>
-          <img src={`${profileAssets}qr.svg`} alt="" />
+        <button type="button" className={styles.toolbarButton} aria-label="Назад к чатам" onClick={onBack}>
+          <img src={`${profileAssets}back.svg`} alt="" />
         </button>
-        <button type="button" className={styles.toolbarButton} aria-label="Меню" onClick={() => showStub()}>
-          <img src={`${profileAssets}menu.svg`} alt="" />
-        </button>
+        <div className={styles.toolbarActions}>
+          <button type="button" className={styles.toolbarButton} aria-label="QR-код" onClick={() => showStub()}>
+            <img src={`${profileAssets}qr.svg`} alt="" />
+          </button>
+          <button type="button" className={styles.toolbarButton} aria-label="Меню" onClick={() => showStub()}>
+            <img src={`${profileAssets}menu.svg`} alt="" />
+          </button>
+        </div>
       </header>
 
       <div className={styles.identity}>

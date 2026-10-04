@@ -75,7 +75,7 @@ export function ChatListScreen() {
       )}
       {tab === 'contacts' && <ContactsTab />}
       {tab === 'calls' && <CallsTab />}
-      {tab === 'profile' && <MyProfile />}
+      {tab === 'profile' && <MyProfile onBack={() => setTab('chats')} />}
 
       <nav className={styles.tabBar} aria-label="Разделы">
         <div className={`${styles.tabs} ${styles.glass}`}>

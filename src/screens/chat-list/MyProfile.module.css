@@ -41,9 +41,9 @@
   height: 56px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 17px;
+  justify-content: space-between;
 }
+.toolbarActions { display: flex; gap: 17px; }
 .toolbarButton { width: 29px; height: 36px; display: grid; place-items: center; }
 .toolbarButton img, .action img { width: 28px; height: auto; filter: var(--p-icon-filter); }
 
