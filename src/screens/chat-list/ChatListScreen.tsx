@@ -112,6 +112,51 @@ function ChatsTab({ storiesOpen, onStoriesOpen, seen, onOpenStory }: {
   const visible = folder === 'all' ? chats : chats.filter((chat) => chat.folder === folder)
   const header = useRef<HTMLElement>(null)
 
+  // Pulling the list down at the very top unfolds the stories row: touch swipe,
+  // mouse drag, or trackpad / wheel scroll up.
+  useEffect(() => {
+    const screen = header.current?.closest('section')
+    if (storiesOpen || !screen) return
+    const PULL = 48
+    let startY: number | null = null
+    const begin = (y: number) => { startY = screen.scrollTop <= 0 ? y : null }
+    const move = (y: number) => {
+      if (startY !== null && y - startY > PULL) {
+        startY = null
+        onStoriesOpen(true)
+      }
+    }
+    const end = () => { startY = null }
+    const onTouchStart = (event: TouchEvent) => begin(event.touches[0].clientY)
+    const onTouchMove = (event: TouchEvent) => move(event.touches[0].clientY)
+    const onPointerDown = (event: PointerEvent) => event.pointerType === 'mouse' && begin(event.clientY)
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse' || startY === null) return
+      if (event.clientY - startY > PULL) {
+        // Releasing the mouse over a chat row would otherwise open that chat.
+        screen.addEventListener('click', (click) => click.preventDefault(), { capture: true, once: true })
+      }
+      move(event.clientY)
+    }
+    const onWheel = (event: WheelEvent) => screen.scrollTop <= 0 && event.deltaY < -20 && onStoriesOpen(true)
+    screen.addEventListener('touchstart', onTouchStart, { passive: true })
+    screen.addEventListener('touchmove', onTouchMove, { passive: true })
+    screen.addEventListener('touchend', end)
+    screen.addEventListener('pointerdown', onPointerDown)
+    screen.addEventListener('pointermove', onPointerMove)
+    window.addEventListener('pointerup', end)
+    screen.addEventListener('wheel', onWheel, { passive: true })
+    return () => {
+      screen.removeEventListener('touchstart', onTouchStart)
+      screen.removeEventListener('touchmove', onTouchMove)
+      screen.removeEventListener('touchend', end)
+      screen.removeEventListener('pointerdown', onPointerDown)
+      screen.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('pointerup', end)
+      screen.removeEventListener('wheel', onWheel)
+    }
+  }, [storiesOpen, onStoriesOpen])
+
   // Any scroll down folds the stories row back into the title.
   useEffect(() => {
     const screen = header.current?.closest('section')
