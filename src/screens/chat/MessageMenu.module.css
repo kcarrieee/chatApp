@@ -1,0 +1,88 @@
+/* Absolute to the phone screen, like the stub sheet. */
+.backdrop {
+  --menu-bg: rgb(255 255 255 / .88);
+  --menu-ink: #242429;
+  --menu-line: rgb(60 60 67 / .14);
+  --preview-bg: #fff;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: rgb(0 0 0 / .28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+:global([data-theme='dark']) .backdrop {
+  --menu-bg: rgb(44 44 48 / .9);
+  --menu-ink: #efeff5;
+  --menu-line: rgb(255 255 255 / .1);
+  --preview-bg: #1c1c1e;
+  background: rgb(0 0 0 / .5);
+}
+
+.stack {
+  width: min(100%, 300px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  transform-origin: left center;
+}
+.stack.out { align-items: flex-end; transform-origin: right center; }
+
+.preview {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 18px;
+  background: var(--preview-bg);
+  color: var(--menu-ink);
+  box-shadow: 0 8px 30px rgb(0 0 0 / .18);
+}
+.out .preview { background: #dec6fe; color: #242429; }
+:global([data-theme='dark']) .out .preview { background: #8e4ee0; color: #efeff5; }
+.author { font-size: 13px; font-weight: 600; color: #9757e9; }
+.out .author { color: inherit; opacity: .6; }
+.previewText {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
+  font-size: 17px;
+  line-height: 22px;
+  white-space: pre-wrap;
+}
+
+.menu {
+  width: 240px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--menu-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 12px 40px rgb(0 0 0 / .22);
+}
+.menu .item {
+  width: 100%;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border: 0;
+  background: none;
+  color: var(--menu-ink);
+  font: inherit;
+  font-size: 17px;
+  cursor: pointer;
+}
+.item + .item { border-top: .5px solid var(--menu-line); }
+.item:hover, .item:focus-visible { background: color-mix(in srgb, var(--menu-ink) 8%, transparent); outline: 0; }
+/* .menu prefix: the chat screen's button reset loads later with the same specificity. */
+.menu .item.danger { color: #ff383c; }

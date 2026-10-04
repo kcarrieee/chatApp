@@ -416,6 +416,7 @@
   z-index: 2;
   flex: none;
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   /* Room for the home indicator, as in Figma. */
   padding: 4px 28px 28px;
@@ -493,4 +494,118 @@
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 8px 24px rgb(151 87 233 / .35);
+}
+
+/* ---------- Live chat: typing, gestures, replies, menu toast ---------- */
+
+.typing { color: #fff; }
+:global([data-theme='dark']) .typing { color: #c9a6ff; }
+
+/* Wraps a bubble: follows the finger on swipe-to-reply, owns the long press. */
+.gesture {
+  position: relative;
+  max-width: 86%;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  cursor: default;
+}
+.gesture .bubble { max-width: 100%; }
+.replyArrow {
+  position: absolute;
+  top: 50%;
+  left: -38px;
+  width: 28px;
+  height: 28px;
+  margin-top: -14px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(0 0 0 / .28);
+  color: #fff;
+  pointer-events: none;
+}
+
+/* Quote of the message being answered, inside the bubble. */
+.quote {
+  width: 100%;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 2px 0 4px;
+  padding: 3px 8px;
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  background: rgb(151 87 233 / .12);
+  text-align: left;
+}
+.out .quote { border-left-color: var(--out-ink); background: rgb(167 58 253 / .12); }
+:global([data-theme='dark']) .out .quote { border-left-color: #efeff5; background: rgb(255 255 255 / .14); }
+.quoteAuthor { font: 600 13px/17px var(--sans); color: var(--accent); }
+.out .quoteAuthor { color: var(--out-ink); }
+:global([data-theme='dark']) .out .quoteAuthor { color: #efeff5; }
+.quoteText {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 400 14px/18px var(--sans);
+  opacity: .85;
+}
+
+/* Flash after jumping to a quoted message. */
+.highlighted .bubble,
+.highlighted .sticker { animation: flash 1.4s ease-out; }
+@keyframes flash {
+  0%, 40% { box-shadow: 0 0 0 4px rgb(255 255 255 / .9), 0 0 24px rgb(151 87 233 / .8); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* Reply preview above the composer. */
+.replyBar {
+  flex-basis: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 6px 0 14px;
+  border-radius: 18px;
+  color: var(--accent);
+}
+.replyText { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.replyAuthor { font: 600 13px/17px var(--sans); }
+.replySnippet {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 400 14px/18px var(--sans);
+  color: var(--ink);
+}
+.replyClose {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 30px;
+}
+
+/* Absolute to the phone screen, so it stays put while the chat scrolls. */
+.toast {
+  position: absolute;
+  z-index: 11;
+  top: calc(var(--status-bar, 0px) + 70px);
+  left: 0;
+  right: 0;
+  width: max-content;
+  margin: 0 auto;
+  padding: 8px 16px;
+  border-radius: 100px;
+  background: rgb(28 28 30 / .88);
+  color: #fff;
+  font: 500 15px/20px var(--sans);
+  pointer-events: none;
 }
