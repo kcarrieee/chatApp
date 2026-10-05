@@ -131,3 +131,18 @@
   color: rgb(255 255 255 / 75%);
   font-size: calc(15 * var(--u));
 }
+
+/* Keep media unchanged; only the controls and camera placeholder follow the theme. */
+:global([data-theme='light']) .screen {
+  --call-control: rgb(255 255 255 / 82%);
+  --call-control-border: rgb(255 255 255 / 55%);
+  --call-active: #eee2ff;
+}
+:global([data-theme='light']) .control:not(.endCall) img { filter: brightness(0) opacity(.85); }
+:global([data-theme='light']) .control[aria-pressed='true']:not(.microphone) { background: #d8b9ff; }
+:global([data-theme='light']) .effectsToggle { background: rgb(255 255 255 / 82%); }
+:global([data-theme='light']) .effectsToggle img { filter: none; }
+:global([data-theme='light']) .effectsToggle[aria-expanded='true'] { background: #d8b9ff; }
+:global([data-theme='light']) .selfView { background: #f5f4f8; color: #242429; }
+:global([data-theme='light']) .cameraState img { filter: brightness(0) opacity(.85); }
+:global([data-theme='light']) .cameraState button { background: #e8ddf7; color: #492776; }

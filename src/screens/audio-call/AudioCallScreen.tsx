@@ -1,3 +1,4 @@
+import { useResolvedTheme } from '../chat-list/theme'
 import { initials } from '../chat-list/chats'
 import { usePeer } from '../../data/usePeer'
 import { useState } from 'react'
@@ -18,7 +19,9 @@ function Icon({ name }: { name: string }) {
 }
 
 /** Local call simulation. The theme prop is ready for the future app-wide setting. */
-export function AudioCallScreen({ theme = 'dark' }: { theme?: CallTheme }) {
+export function AudioCallScreen({ theme: themeOverride }: { theme?: CallTheme }) {
+  const appTheme = useResolvedTheme()
+  const theme = themeOverride ?? appTheme
   const peer = usePeer()
   const reducedMotion = useReducedMotion()
   const connectedAt = useCallSession(peer.id)

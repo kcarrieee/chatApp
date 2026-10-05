@@ -1,5 +1,5 @@
 // App theme: light, dark or follow the system. Applied as <html data-theme="light|dark">,
-// screens read their colors from CSS variables. Call screens keep their own fixed look.
+// Screens use CSS variables or useResolvedTheme for theme-specific assets.
 import { useSyncExternalStore } from 'react'
 import './theme.css'
 
@@ -9,12 +9,15 @@ const KEY = 'chat-theme'
 const EVENT = 'chat-theme-change'
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)')
 
+let sessionChoice: ThemeChoice | undefined
+
 function read(): ThemeChoice {
+  if (sessionChoice !== undefined) return sessionChoice
   try {
     const saved = localStorage.getItem(KEY)
-    return saved === 'light' || saved === 'dark' ? saved : 'system'
+    return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'dark'
   } catch {
-    return 'system'
+    return 'dark'
   }
 }
 
@@ -25,6 +28,7 @@ function apply() {
 }
 
 export function setTheme(choice: ThemeChoice) {
+  sessionChoice = choice
   try {
     localStorage.setItem(KEY, choice)
   } catch {
@@ -43,5 +47,22 @@ export function useThemeChoice() {
   return useSyncExternalStore(subscribe, read)
 }
 
+export function useResolvedTheme(): 'light' | 'dark' {
+  return useSyncExternalStore(subscribe, () => {
+    const choice = read()
+    return choice === 'dark' || (choice === 'system' && systemDark.matches) ? 'dark' : 'light'
+  })
+}
+
+function refresh() {
+  apply()
+  window.dispatchEvent(new Event(EVENT))
+}
 apply()
-systemDark.addEventListener('change', apply)
+systemDark.addEventListener('change', refresh)
+window.addEventListener('storage', event => {
+  if (event.key === KEY || event.key === null) {
+    sessionChoice = undefined
+    refresh()
+  }
+})

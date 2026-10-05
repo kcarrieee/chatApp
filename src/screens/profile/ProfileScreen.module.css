@@ -212,3 +212,28 @@
   color: rgb(255 255 255 / 50%);
   font-size: calc(15 * var(--u));
 }
+
+/* Light profile shares the app setting, including the transparent phone chrome. */
+:global([data-theme='light']) :global(.phone-screen):has(.screen) { background: #f5f4f8; color: #242429; }
+:global([data-theme='light']) :global(.phone-screen):has(.screen) :global(.status-levels) { filter: none; }
+:global([data-theme='light']) :global(.phone-screen):has(.screen) :global(.home-indicator)::after { background: #242429; }
+:global([data-theme='light']) .screen {
+  color: #242429;
+  background: linear-gradient(180deg, transparent, #f5f4f8 calc(350 * var(--u))),
+    radial-gradient(ellipse at 90% 0%, #f6a5de, transparent 65%) center top / 100% calc(400 * var(--u)) no-repeat,
+    linear-gradient(#c7a6f5, #f5f4f8) center top / 100% calc(400 * var(--u)) no-repeat, #f5f4f8;
+}
+:global([data-theme='light']) .toolbar::before { background: rgb(245 244 248 / 70%); }
+:global([data-theme='light']) .toolbarButton img,
+:global([data-theme='light']) .action img { filter: brightness(0) opacity(.85); }
+:global([data-theme='light']) .status,
+:global([data-theme='light']) .emptyPosts,
+:global([data-theme='light']) .details dt { color: #696779; }
+:global([data-theme='light']) .action { background: rgb(255 255 255 / 65%); color: #242429; }
+:global([data-theme='light']) .action[href]:hover { background: #fff; }
+:global([data-theme='light']) .action[href]:active { background: #e5dcf3; }
+:global([data-theme='light']) .details { background: #fff; }
+:global([data-theme='light']) .accent { color: #007bad; }
+:global([data-theme='light']) .tabs { background: #e9e7ee; }
+:global([data-theme='light']) .tabs > .selected { background: #fff; }
+:global([data-theme='light']) .screen a:focus-visible { outline-color: #7e2ee6; }
