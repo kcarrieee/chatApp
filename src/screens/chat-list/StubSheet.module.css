@@ -9,6 +9,8 @@
 }
 
 .sheet {
+  /* Scales with the phone on Karina's cqw screens; inside my zoomed screens --sheet-zoom is 1. */
+  zoom: var(--sheet-zoom, var(--phone-scale, 1));
   width: 100%;
   display: flex;
   flex-direction: column;

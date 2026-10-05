@@ -45,7 +45,7 @@
   position: absolute;
   z-index: 2;
   inset: 0 0 auto;
-  padding: calc(var(--status-bar, 0px) + 4px) 12px 0;
+  padding: calc(var(--sb) + 4px) 12px 0;
 }
 .progress { display: flex; gap: 4px; }
 .segment {

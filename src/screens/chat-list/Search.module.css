@@ -35,7 +35,7 @@
   z-index: 2;
   display: flex;
   gap: 8px;
-  padding: calc(var(--status-bar, 0px) + 2px) 12px 8px;
+  padding: calc(var(--sb) + 2px) 12px 8px;
   background: var(--bg);
 }
 .back {

@@ -10,7 +10,7 @@
   --p-selected: #fff;
   --p-icon-filter: brightness(0) opacity(.85);
   flex: 1;
-  padding: var(--status-bar, 0px) 17px 120px;
+  padding: var(--sb) 17px 120px;
   color: var(--p-ink);
   background: linear-gradient(#e9dcff, rgb(255 255 255 / 0) 320px), var(--p-bg);
   font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;

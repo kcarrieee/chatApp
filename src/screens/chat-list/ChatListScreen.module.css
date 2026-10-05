@@ -36,9 +36,14 @@
   --card-line: #e6e6ea;
   --field: rgb(241 241 241 / .85);
   --sans: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Designed in px for a 400px phone: zoom with the phone like the cqw-based screens. */
+  zoom: var(--phone-scale, 1);
+  --sheet-zoom: 1;
+  /* --status-bar is in cqw and would be zoomed twice; undo the zoom for it. */
+  --sb: calc(var(--status-bar, 0px) / var(--phone-scale, 1));
   /* Own scroller reaching under the transparent status bar, so the sticky header covers it. */
-  height: calc(100% + var(--status-bar, 0px));
-  margin-top: calc(-1 * var(--status-bar, 0px));
+  height: calc(100% + var(--sb));
+  margin-top: calc(-1 * var(--sb));
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -107,7 +112,7 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  padding: var(--status-bar, 0px) 0 10px;
+  padding: var(--sb) 0 10px;
 }
 /* Soft scroll edge: content fades and blurs under the header. */
 .header::before {

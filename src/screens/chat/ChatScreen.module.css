@@ -17,9 +17,14 @@
   --reaction: rgb(151 87 233 / .14);
   --sans: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   /* The screen is its own scroller, so the wallpaper stays put while messages move. */
+  /* Designed in px for a 400px phone: zoom with the phone like the cqw-based screens. */
+  zoom: var(--phone-scale, 1);
+  --sheet-zoom: 1;
+  /* --status-bar is in cqw and would be zoomed twice; undo the zoom for it. */
+  --sb: calc(var(--status-bar, 0px) / var(--phone-scale, 1));
   /* Reaches under the transparent status bar. */
-  height: calc(100% + var(--status-bar, 0px));
-  margin-top: calc(-1 * var(--status-bar, 0px));
+  height: calc(100% + var(--sb));
+  margin-top: calc(-1 * var(--sb));
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -96,8 +101,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  height: calc(54px + var(--status-bar, 0px));
-  padding: var(--status-bar, 0px) 16px 10px;
+  height: calc(54px + var(--sb));
+  padding: var(--sb) 16px 10px;
   flex: none;
 }
 /* Soft scroll edge under the controls. */
@@ -596,7 +601,7 @@
 .toast {
   position: absolute;
   z-index: 11;
-  top: calc(var(--status-bar, 0px) + 70px);
+  top: calc(var(--sb) + 70px);
   left: 0;
   right: 0;
   width: max-content;
