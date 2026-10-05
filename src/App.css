@@ -119,3 +119,9 @@
     display: none;
   }
 }
+
+/* A phone shows no scrollbars: hide them for every scroller inside the screen. */
+.phone-screen,
+.phone-screen * { scrollbar-width: none; }
+.phone-screen ::-webkit-scrollbar,
+.phone-screen::-webkit-scrollbar { display: none; }
