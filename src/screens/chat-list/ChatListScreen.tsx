@@ -44,7 +44,9 @@ export function ChatListScreen() {
 
 function ChatListContent() {
   const theme = useResolvedTheme()
-  const glassProps = { displacement: true, displacementScale: 8, blurAmount: 0.5, saturation: 110, aberrationIntensity: 0, elasticity: 0, cornerRadius: 100, overLight: theme === 'light' }
+  // No SVG displacement: Chromium would swap the blur for a near-zero refraction filter while
+  // Safari ignores it, so web and mobile looked different. Plain blur matches everywhere.
+  const glassProps = { displacement: false, displacementScale: 8, blurAmount: 0.5, saturation: 110, aberrationIntensity: 0, elasticity: 0, cornerRadius: 100, overLight: theme === 'light' }
   const [tab, setTab] = useState<Tab>('chats')
   const [searching, setSearching] = useState(false)
   // Lives here, so the stories row stays open after closing the viewer.

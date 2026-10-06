@@ -9,8 +9,8 @@
   --meta-in: rgb(0 0 0 / .5);
   --meta-out: rgb(167 58 253 / .9);
   --glass-bg: rgb(255 255 255 / .65);
-  /* Shared glass recipe (also in chat-list/ChatListScreen.module.css): fill, blur, rim. */
-  --glass-blur: blur(12px) saturate(1.4);
+  /* Shared glass recipe (also in chat-list/ChatListScreen.module.css): fill and rim. The blur is written
+     out where used: Safari ignores -webkit-backdrop-filter with var() values. */
   --glass-rim: inset 0 0 0 .5px rgb(0 0 0 / .1), inset 0 .5px .5px rgb(255 255 255 / .5);
   --card-photo: #f6f6f9;
   --muted-text: #808093;
@@ -80,8 +80,8 @@
 .glass {
   border-radius: 296px;
   background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
   box-shadow: 0 8px 40px rgb(0 0 0 / .12), var(--glass-rim);
 }
 
