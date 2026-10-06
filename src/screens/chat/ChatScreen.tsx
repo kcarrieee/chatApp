@@ -22,7 +22,8 @@ import stickerIcon from './assets/sticker-icon.svg'
 import micIcon from './assets/mic.svg'
 import { StubSheet } from '../chat-list/StubSheet'
 import { showStub } from '../chat-list/stub'
-import { products, scripts, type Product, type ProductId } from './conversations'
+import { products, scripts, type Product, type ProductId, type ScriptItem } from './conversations'
+import { currentDayLabel, olderDays } from './history'
 import { hash, playMelody, seconds, waveform } from './melody'
 import { canReply, replier, replyText } from './replies'
 import { MessageMenu, type MenuAction } from './MessageMenu'
@@ -39,6 +40,7 @@ type Message = { id: number; out?: boolean; time: string; read?: boolean; sender
   | { kind: 'sticker' }
   | { kind: 'product'; product: ProductId }
   | { kind: 'voice'; duration: string; seed: number }
+  | { kind: 'day'; label: string }
 )
 
 // The conversation from Figma.
@@ -51,18 +53,31 @@ const alisaMessages: Message[] = [
   { id: 6, kind: 'voice', out: true, duration: '0:04', seed: 41, time: '9:41' },
 ]
 
-// Made-up history from conversations.ts, ending with the last message from the chat list.
+function fromScript(item: ScriptItem, id: number, seedKey: string): Message {
+  const out = item.from === 'me'
+  const base = { id, time: item.time, out, read: out, sender: out ? undefined : item.from }
+  if ('text' in item) return { ...base, kind: 'text', text: item.text }
+  if ('voice' in item) return { ...base, kind: 'voice', duration: item.voice, seed: hash(seedKey) }
+  if ('product' in item) return { ...base, kind: 'product', product: item.product }
+  return { ...base, kind: 'sticker' }
+}
+
+/** Two earlier days from history.ts, each under a date chip; ids stay clear of the current day's. */
+function earlier(chat: Chat): Message[] {
+  let id = 10_000
+  return olderDays(chat).flatMap((day) => [
+    { id: id++, kind: 'day', label: day.label, time: '' } satisfies Message,
+    ...day.items.map((item) => fromScript(item, id++, `${chat.id}-old-${id}`)),
+  ])
+}
+
+const dayChip = (chat: Chat): Message => ({ id: 9_999, kind: 'day', label: currentDayLabel(chat), time: '' })
+
+// Earlier days, then today's script from conversations.ts, ending with the last message from the chat list.
 function conversation(chat: Chat): Message[] {
-  const history = (scripts[chat.id] ?? []).map((item, i): Message => {
-    const out = item.from === 'me'
-    const base = { id: i + 1, time: item.time, out, read: out, sender: out ? undefined : item.from }
-    if ('text' in item) return { ...base, kind: 'text', text: item.text }
-    if ('voice' in item) return { ...base, kind: 'voice', duration: item.voice, seed: hash(`${chat.id}-${i}`) }
-    if ('product' in item) return { ...base, kind: 'product', product: item.product }
-    return { ...base, kind: 'sticker' }
-  })
-  const last: Message = { id: history.length + 1, kind: 'text', text: chat.message, time: chat.time, sender: chat.sender, out: chat.read, read: chat.read }
-  return [...history, last]
+  const today = (scripts[chat.id] ?? []).map((item, i) => fromScript(item, i + 1, `${chat.id}-${i}`))
+  const last: Message = { id: today.length + 1, kind: 'text', text: chat.message, time: chat.time, sender: chat.sender, out: chat.read, read: chat.read }
+  return [...earlier(chat), dayChip(chat), ...today, last]
 }
 
 const clock = (total: number) => `${Math.floor(total / 60)}:${String(Math.floor(total % 60)).padStart(2, '0')}`
@@ -71,6 +86,7 @@ const now = () => new Date().toLocaleTimeString('ru', { hour: 'numeric', minute:
 /** One-line description of any message, for quotes and the menu preview. */
 function summary(message: Message) {
   if (message.kind === 'text') return message.text
+  if (message.kind === 'day') return message.label
   if (message.kind === 'voice') return `🎤 Голосовое, ${message.duration}`
   if (message.kind === 'product') return `🛍 ${products[message.product].title}`
   return 'Стикер'
@@ -100,7 +116,7 @@ function Conversation({ id }: { id: string }) {
   const contact = contacts.find((item) => item.id === id)
   const peer = chat ?? contact ?? chats[0]
   const [messages, setMessages] = useState(() =>
-    peer.id === 'alisa' ? alisaMessages : chat ? conversation(chat) : [])
+    !chat ? [] : chat.id === 'alisa' ? [...earlier(chat), { ...dayChip(chat), label: 'Сегодня' }, ...alisaMessages] : conversation(chat))
   const [draft, setDraft] = useState('')
   // Recording is simulated: the timer runs and sending adds a voice message with its own tune.
   const [recordingSince, setRecordingSince] = useState<number | null>(null)
@@ -423,6 +439,10 @@ function MessageRow({ message, fresh, highlighted, onReply, onMenu, onJump }: {
   const side = message.out ? styles.out : styles.in
   const rowClass = `${styles.row} ${side} ${highlighted ? styles.highlighted : ''}`
   const gestures = { onReply: () => onReply(message), onMenu: () => onMenu(message) }
+
+  if (message.kind === 'day') {
+    return <li className={styles.day} data-id={message.id}><span>{message.label}</span></li>
+  }
 
   if (message.kind === 'sticker') {
     return (

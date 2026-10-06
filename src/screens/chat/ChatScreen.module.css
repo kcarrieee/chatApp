@@ -9,7 +9,9 @@
   --meta-in: rgb(0 0 0 / .5);
   --meta-out: rgb(167 58 253 / .9);
   --glass-bg: rgb(255 255 255 / .65);
-  --glass-edge: transparent;
+  /* Shared glass recipe (also in chat-list/ChatListScreen.module.css): fill, blur, rim. */
+  --glass-blur: blur(12px) saturate(1.4);
+  --glass-rim: inset 0 0 0 .5px rgb(0 0 0 / .1), inset 0 .5px .5px rgb(255 255 255 / .5);
   --card-photo: #f6f6f9;
   --muted-text: #808093;
   --voice: #a161f3;
@@ -45,7 +47,7 @@
   --meta-in: rgb(239 239 245 / .6);
   --meta-out: rgb(239 239 245 / .55);
   --glass-bg: rgb(44 44 48 / .62);
-  --glass-edge: rgb(255 255 255 / .14);
+  --glass-rim: inset 0 0 0 .5px rgb(255 255 255 / .16), inset 0 .5px .5px rgb(255 255 255 / .18);
   --card-photo: #2c2c2e;
   --voice: #efeff5;
   --voice-time: rgb(239 239 245 / .5);
@@ -78,9 +80,9 @@
 .glass {
   border-radius: 296px;
   background: var(--glass-bg);
-  backdrop-filter: blur(12px) saturate(1.4);
-  -webkit-backdrop-filter: blur(12px) saturate(1.4);
-  box-shadow: 0 8px 40px rgb(0 0 0 / .12), inset 0 0 0 .5px var(--glass-edge);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 8px 40px rgb(0 0 0 / .12), var(--glass-rim);
 }
 
 .visuallyHidden {
@@ -617,4 +619,21 @@
 /* Mobile has no status bar mockup: same top gap as the side padding. */
 @media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
   .header { height: 70px; padding-top: 16px; }
+}
+
+/* Date chip between days of history. */
+.day {
+  align-self: center;
+  margin: 6px 0 2px;
+  list-style: none;
+}
+.day span {
+  display: block;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgb(0 0 0 / .28);
+  color: #fff;
+  font: 500 13px/18px var(--sans);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
