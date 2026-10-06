@@ -402,8 +402,9 @@
 }
 /* Leave the scrolling content visible for the glass to refract. */
 .liquid {
-  backdrop-filter: blur(12px) saturate(1.4);
-  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  /* Karina's original liquid glass blur; the library adds its own blur on the surface too. */
+  backdrop-filter: blur(8px) saturate(1.1);
+  -webkit-backdrop-filter: blur(8px) saturate(1.1);
 }
 .liquid :global([data-lg-surface]) {
   background: var(--glass-bg);
