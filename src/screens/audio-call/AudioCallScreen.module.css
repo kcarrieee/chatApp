@@ -124,8 +124,8 @@
   border: 1px solid var(--call-control-border);
   background: var(--call-control);
   box-shadow: 0 calc(8 * var(--u)) calc(40 * var(--u)) rgb(0 0 0 / 12%);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   cursor: pointer;
 }
 .control[aria-pressed='true']:not(.microphone) { background: rgb(255 255 255 / 32%); }

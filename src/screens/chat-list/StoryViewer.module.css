@@ -124,8 +124,8 @@
   border-radius: 22px;
   outline: 0;
   background: rgb(0 0 0 / .2);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   color: #fff;
   font: 400 16px/20px var(--sans);
 }
