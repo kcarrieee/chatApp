@@ -3,7 +3,7 @@ export const demoContact = {
   id: 'alex',
   name: 'Татьяна',
   initials: 'Т',
-  status: 'был(а) недавно',
+  status: 'была недавно',
   avatar: `${import.meta.env.BASE_URL}assets/audio-call/tatyana.svg`,
   portrait: `${import.meta.env.BASE_URL}assets/profile/portrait.svg`,
 }

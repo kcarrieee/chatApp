@@ -10,7 +10,7 @@
   --p-selected: #fff;
   --p-icon-filter: brightness(0) opacity(.85);
   flex: 1;
-  padding: var(--sb) 17px 120px;
+  padding: 0 17px 32px;
   color: var(--p-ink);
   background: linear-gradient(#e9dcff, rgb(255 255 255 / 0) 320px), var(--p-bg);
   font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -38,7 +38,13 @@
 .profile :where(button):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .toolbar {
-  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  isolation: isolate;
+  margin-inline: -17px;
+  padding: var(--sb) 17px 0;
+  height: calc(var(--sb) + 56px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -178,3 +184,18 @@
 }
 .statistics span { display: flex; align-items: center; gap: 4px; }
 .statistics img { width: 17px; }
+
+/* Extend the soft edge below the controls; the mask removes both tint and blur. */
+.toolbar::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -40px;
+  z-index: -1;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--p-bg) 65%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 45%, rgb(0 0 0 / .65) 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, rgb(0 0 0 / .65) 70%, transparent 100%);
+  opacity: var(--header-scroll, 0);
+}

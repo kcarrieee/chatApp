@@ -1,5 +1,5 @@
 // Own profile, laid out like Karina's contact profile (screens/profile) and themed.
-import type { CSSProperties } from 'react'
+import { useLayoutEffect, useRef, type CSSProperties } from 'react'
 import { me, storyUsers } from './chats'
 import meAvatar from './assets/me.jpg'
 import { showStub } from './stub'
@@ -45,13 +45,22 @@ const EditIcon = () => (
 )
 
 export function MyProfile({ onBack }: { onBack: () => void }) {
+  const rootRef = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    const root = rootRef.current!
+    const scroller = root.closest('section')!
+    const update = () => root.style.setProperty('--header-scroll', String(Math.min(1, scroller.scrollTop / 40)))
+    update()
+    scroller.addEventListener('scroll', update, { passive: true })
+    return () => scroller.removeEventListener('scroll', update)
+  }, [])
   const theme = useThemeChoice()
   const posts = storyUsers.find((user) => user.mine)?.stories ?? []
   // Long names shrink to stay on one line, as in the contact profile.
   const nameSize = Math.min(52, 330 / (0.6 * me.name.length))
 
   return (
-    <div className={styles.profile} style={{ '--profile-bg': `url(${profileAssets}background.svg)` } as CSSProperties}>
+    <div ref={rootRef} className={styles.profile} style={{ '--profile-bg': `url(${profileAssets}background.svg)` } as CSSProperties}>
       <header className={styles.toolbar}>
         <button type="button" className={styles.toolbarButton} aria-label="Назад к чатам" onClick={onBack}>
           <img src={`${profileAssets}back.svg`} alt="" />

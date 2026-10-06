@@ -4,7 +4,6 @@ import alisa from './assets/alisa.png'
 import viki from './assets/viki.png'
 import berries from './assets/berries.png'
 import elizaveta from './assets/elizaveta.png'
-import wbchat from './assets/wbchat.png'
 import andrey from './assets/andrey.png'
 import liza from './assets/liza.png'
 import katrin from './assets/katrin.png'
@@ -50,19 +49,18 @@ export const folders: { id: FolderId; label: string; badge?: number; accent?: bo
 ]
 
 export const chats: Chat[] = [
-  { id: 'alisa', name: 'Алиса', avatar: alisa, folder: 'personal', message: 'Привет) сделал новую проект, зацени)) 😎⚡️', time: '9:41', unread: 1, stories: 1 },
+  { id: 'alisa', name: 'Алиса', avatar: alisa, folder: 'personal', message: 'Привет) сделала новый проект, зацени)) 😎⚡️', time: '9:41', unread: 1, stories: 1 },
   { id: 'viki', name: 'Вики', avatar: viki, folder: 'personal', message: 'Мы скоро начнем прямую трансляцию', time: '9:41', unread: 1, muted: true, stories: 1 },
   { id: 'berries', name: 'Ягодные кочевники', avatar: berries, folder: 'channels', sender: 'Мартин', message: 'Нас уже 2 500 участников! Ура!', time: '9:22', muted: true, members: '505 543 подписчика' },
   { id: 'elizaveta', name: 'Елизавета', avatar: elizaveta, folder: 'personal', message: 'Столик на четверых, в 14:00, будем тебя ждать)', time: '9:12', read: true, stories: 2 },
-  { id: 'wbchat', name: 'WB Chat', avatar: wbchat, folder: 'channels', message: 'Приветствуем вас в нашем официальном канале! 💜💜💜', time: '8:12', unread: 1, verified: true, members: '1,2 млн подписчиков' },
-  { id: 'andrey', name: 'Андрей', avatar: andrey, folder: 'work', message: 'Отправила документы, проверь почту', time: '8:28', unread: 1 },
+  { id: 'andrey', name: 'Андрей', avatar: andrey, folder: 'work', message: 'Отправил документы, проверь почту', time: '8:28', unread: 1 },
   { id: 'liza', name: 'Лиза', avatar: liza, folder: 'personal', message: 'Буду через 15 минут, подождите 🙏🏻', time: '9:12', stories: 2 },
   { id: 'katrin', name: 'Кэтрин', avatar: katrin, folder: 'work', message: 'Проект готов, можно отправлять клиенту', time: '8:28', unread: 1 },
   { id: demoContact.id, name: demoContact.name, avatar: demoContact.avatar, color: '#0088ff', folder: 'personal', message: 'Созвонимся вечером? Есть пара идей по концепту', time: 'Вчера', read: true },
   { id: 'design-team', name: 'Команда дизайна', color: '#ff8d28', folder: 'work', sender: 'Карина', message: 'Скинула новые макеты в фигму, посмотрите до обеда', time: 'Вчера', unread: 3, members: '5 участников' },
   { id: 'mama', name: 'Мама', color: '#ff383c', folder: 'personal', message: 'Не забудь шапку, сегодня обещали холод', time: 'Вчера' },
   { id: 'books', name: 'Книжный клуб', color: '#34c759', folder: 'channels', sender: 'Оля', message: 'В субботу обсуждаем «Мастера и Маргариту», кто с нами?', time: 'Пн', muted: true, unread: 12, members: '214 участников' },
-  { id: 'sergey', name: 'Сергей Петров', color: '#6155f5', folder: 'work', message: 'Договор подписал, скан в почте', time: 'Пн', read: true },
+  { id: 'sergey', name: 'Сергей Петров', color: '#6155f5', folder: 'work', message: 'Договор подписала, скан в почте', time: 'Пн', read: true },
   { id: 'product-team', name: 'Продукт · Chat Concept', color: '#9757e9', folder: 'work', sender: 'Карина', message: 'Собрала фидбек по прототипу, гляньте до созвона', time: 'Пн', unread: 2, members: '7 участников' },
   { id: 'masha', name: 'Маша', color: '#ff2d92', folder: 'personal', message: 'Ахаха, это лучшее видео за неделю 😂', time: 'Пн', unread: 4 },
   { id: 'neighbors', name: 'Соседи по дому', color: '#00c3d0', folder: 'personal', sender: 'Ирина', message: 'Завтра отключат горячую воду с 10 до 18 🙃', time: 'Пн', muted: true, unread: 23, members: '48 участников' },

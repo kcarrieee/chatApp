@@ -79,7 +79,7 @@ function summary(message: Message) {
 function peerStatus(chat: Chat | undefined, status: string | undefined) {
   if (status) return status[0].toUpperCase() + status.slice(1)
   if (chat?.members) return chat.members
-  return 'Был(а) недавно'
+  return 'Недавно в сети'
 }
 
 function subscribe(onChange: () => void) {
@@ -266,7 +266,7 @@ function Conversation({ id }: { id: string }) {
       </header>
 
       <ol ref={list} className={styles.messages}>
-        {messages.length === 0 && <li className={styles.empty}>Здесь пока пусто — напишите первым 👋</li>}
+        {messages.length === 0 && <li className={styles.empty}>Здесь пока пусто — начните переписку 👋</li>}
         {messages.map((message) => (
           <MessageRow key={message.id} message={message} fresh={!initialIds.has(message.id)}
             highlighted={highlighted === message.id} onReply={startReply} onMenu={setMenuFor} onJump={jumpTo} />

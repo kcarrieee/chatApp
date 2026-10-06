@@ -40,49 +40,19 @@ export function ProfileScreen() {
   const nameSize = Math.min(NAME_SIZE, 300 / (0.6 * peer.name.length))
   const screenRef = useRef<HTMLElement>(null)
   const headerRef = useRef<HTMLElement>(null)
-  const nameRef = useRef<HTMLHeadingElement>(null)
-
   useLayoutEffect(() => {
-    const screen = screenRef.current!
+    const scroller = screenRef.current!.closest<HTMLElement>('.phone-content')!
     const header = headerRef.current!
-    const name = nameRef.current!
-    const scroller = screen.closest<HTMLElement>('.phone-content')!
-    const button = header.querySelector('a')!
-    let travel = 0
-    let frame = 0
-
-    const update = () => {
-      frame = 0
-      const remaining = Math.max(0, travel - Math.max(0, scroller.scrollTop))
-      const progress = travel > 0 ? 1 - remaining / travel : 0
-      header.style.setProperty('--title-offset', `${remaining}px`)
-      header.style.setProperty('--title-scale', `${1 - progress * (1 - 20 / nameSize)}`)
-      header.style.setProperty('--collapse', `${Math.min(1, progress * 2)}`)
-    }
-    const measure = () => {
-      const titleBox = name.getBoundingClientRect()
-      const buttonBox = button.getBoundingClientRect()
-      travel = titleBox.top + titleBox.height / 2 + scroller.scrollTop
-        - (buttonBox.top + buttonBox.height / 2)
-      update()
-    }
-    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update) }
-    const observer = new ResizeObserver(measure)
-    observer.observe(scroller)
-    measure()
-    scroller.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      observer.disconnect()
-      scroller.removeEventListener('scroll', onScroll)
-      cancelAnimationFrame(frame)
-    }
-  }, [nameSize])
+    const update = () => header.style.setProperty('--collapse', String(Math.min(1, scroller.scrollTop / 40)))
+    update()
+    scroller.addEventListener('scroll', update, { passive: true })
+    return () => scroller.removeEventListener('scroll', update)
+  }, [])
 
   return (
     <section ref={screenRef} className={styles.screen} aria-label={`Профиль: ${peer.name}`}
       style={{ '--name-size': nameSize } as CSSProperties}>
       <header ref={headerRef} className={styles.toolbar}>
-        <span className={styles.headerName} aria-hidden="true">{peer.name}</span>
         <ScreenLink to={routes.chat} id={peer.id} className={styles.toolbarButton}>
           <Icon name="back" /><span className={styles.srOnly}>Назад в чат</span>
         </ScreenLink>
@@ -101,7 +71,7 @@ export function ProfileScreen() {
                 {peer.avatar ? <img src={peer.avatar} alt={peer.name} draggable={false} /> : <span>{initials(peer.name)}</span>}
               </div>}
           </div>
-          <h1 ref={nameRef} className={styles.name}>{peer.name}</h1>
+          <h1 className={styles.name}>{peer.name}</h1>
           <p className={styles.status}>{status}</p>
         </div>
 

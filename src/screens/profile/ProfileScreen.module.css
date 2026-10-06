@@ -55,6 +55,7 @@
   position: sticky;
   top: 0;
   z-index: 3;
+  isolation: isolate;
   height: calc(var(--status-height) + var(--toolbar-height));
   padding: calc(var(--status-height) + var(--toolbar-top)) calc(17.22 * var(--u)) calc(8.61 * var(--u));
   display: flex;
@@ -64,27 +65,15 @@
 .toolbar::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: rgb(16 16 20 / 18%);
+  inset: 0 0 calc(-40 * var(--u));
+  z-index: -1;
+  background: rgb(16 16 20 / 45%);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 45%, rgb(0 0 0 / .65) 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, rgb(0 0 0 / .65) 70%, transparent 100%);
   opacity: var(--collapse);
   pointer-events: none;
-}
-.headerName {
-  position: absolute;
-  top: calc(var(--status-height) + (var(--toolbar-height) + var(--toolbar-top) - 8.61 * var(--u)) / 2);
-  left: 0;
-  width: 100%;
-  text-align: center;
-  font-family: 'Profile WB Sans', sans-serif;
-  font-size: calc(var(--name-size, 58.1232) * var(--u));
-  line-height: calc(70 * var(--u));
-  white-space: nowrap;
-  transform: translateY(calc(-50% + var(--title-offset, 225.685 * var(--u)))) scale(var(--title-scale, 1));
-  transform-origin: center;
-  pointer-events: none;
-  will-change: transform;
 }
 .toolbarActions { display: flex; align-items: center; gap: calc(17.22 * var(--u)); }
 .toolbarButton {
@@ -112,7 +101,6 @@
   max-width: none;
 }
 .name {
-  opacity: 0;
   margin: 0;
   font-family: 'Profile WB Sans', sans-serif;
   font-size: calc(var(--name-size, 58.1232) * var(--u));

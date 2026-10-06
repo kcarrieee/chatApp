@@ -71,7 +71,7 @@ export function profileOf(id: string): PeerProfile {
 
   return {
     kind: 'person',
-    status: contact?.status ?? 'был(а) недавно',
+    status: contact?.status ?? 'недавно в сети',
     details: [
       { label: 'Телефон', value: `+7 9${digits(seed, 2)} ${digits(seed >> 3, 3)}-${digits(seed >> 5, 2)}-${digits(seed >> 7, 2)}`, accent: true },
       { label: 'Имя пользователя', value: `@${translit(name.split(' ')[0])}_${digits(seed, 2)}`, accent: true },

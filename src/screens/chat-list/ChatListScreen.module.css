@@ -398,15 +398,41 @@
 @media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
   .tabBar { padding: 16px 16px 8px; justify-content: center; }
 }
-.tabBar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(rgb(var(--bg-rgb) / 0), var(--bg) 70%);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  mask-image: linear-gradient(transparent, #000 40%);
+/* Leave the scrolling content visible for the glass to refract. */
+.liquid {
+  backdrop-filter: blur(8px) saturate(1.1);
+  -webkit-backdrop-filter: blur(8px) saturate(1.1);
+}
+.liquid :global([data-lg-surface]) {
+  background: rgb(255 255 255 / .48);
+  /* Override the library’s inline bevel with a half-pixel rim. */
+  box-shadow: inset 0 0 0 .5px rgb(0 0 0 / .12), inset 0 .5px .5px rgb(255 255 255 / .5) !important;
+}
+:global([data-theme='dark']) .liquid :global([data-lg-surface]) {
+  background: rgb(32 32 38 / .5);
+  box-shadow: inset 0 0 0 .5px rgb(255 255 255 / .2), inset 0 .5px .5px rgb(255 255 255 / .18) !important;
+}
+/* Keep the glass material, with quieter reflections and depth. */
+.liquid :global([data-lg-highlight]),
+.liquid :global([data-lg-border]) {
+  opacity: .3;
+}
+.liquid :global([data-lg-border]) {
+  padding: .5px !important;
+}
+.liquid :global([data-lg-shadow]) {
+  opacity: .45;
+}
+.tabs > :global([data-lg-content]) {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .liquid :global([data-lg-surface]) { background: var(--bg); }
+}
+@media (prefers-contrast: more) {
+  .liquid :global([data-lg-surface]) { outline: 1px solid var(--ink); outline-offset: -1px; }
 }
 .tabs {
   flex: 0 1 292px;
@@ -434,6 +460,7 @@
 .tab[aria-current='page'] .tabIcon { background: linear-gradient(#9757e9, #ad6dff); }
 .me { border-radius: 50%; object-fit: cover; }
 .search {
+  border-radius: 100px;
   flex: none;
   width: 52px;
   height: 52px;

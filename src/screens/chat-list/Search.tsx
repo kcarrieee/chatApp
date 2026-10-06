@@ -27,7 +27,7 @@ const statusOf = new Map(contacts.map((contact) => [contact.id, contact.status])
 function toResult(item: Chat | Person): Result {
   const status = 'status' in item ? item.status : statusOf.get(item.id)
   const members = 'members' in item ? item.members : undefined
-  return { ...item, subtitle: members ?? status ?? 'был(а) недавно', online: status === 'в сети' }
+  return { ...item, subtitle: members ?? status ?? 'недавно в сети', online: status === 'в сети' }
 }
 
 // Every chat plus contacts we have not chatted with yet.
@@ -38,7 +38,7 @@ const people: Result[] = [
 const channels = chats.filter((chat) => chat.folder === 'channels').map(toResult)
 const byId = new Map([...people, ...channels].map((item) => [item.id, item]))
 
-const topIds = ['liza', 'berries', 'viki', 'wbchat', 'andrey', 'alisa', 'elizaveta', 'katrin']
+const topIds = ['liza', 'berries', 'viki', 'andrey', 'alisa', 'elizaveta', 'katrin']
 // Session storage, so recents survive leaving search to open a chat.
 const RECENT_KEY = 'search-recent'
 const defaultRecent = ['viki', 'andrey', 'berries', 'katrin', 'elena']

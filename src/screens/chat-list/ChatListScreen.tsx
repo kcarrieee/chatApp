@@ -19,7 +19,8 @@ import chatsIcon from './assets/chats.svg'
 import searchIcon from './assets/search.svg'
 import me from './assets/me.jpg'
 import { StubSheet } from './StubSheet'
-import './theme'
+import { useResolvedTheme } from './theme'
+import { LiquidGlass } from '@aberhamm/liquid-glass-react'
 import { showStub } from './stub'
 import { SlidingPill } from './SlidingPill'
 import { motion, MotionConfig } from 'motion/react'
@@ -42,6 +43,8 @@ export function ChatListScreen() {
 }
 
 function ChatListContent() {
+  const theme = useResolvedTheme()
+  const glassProps = { displacement: true, displacementScale: 8, blurAmount: 0.5, saturation: 110, aberrationIntensity: 0, elasticity: 0, cornerRadius: 100, overLight: theme === 'light' }
   const [tab, setTab] = useState<Tab>('chats')
   const [searching, setSearching] = useState(false)
   // Lives here, so the stories row stays open after closing the viewer.
@@ -88,8 +91,8 @@ function ChatListContent() {
         {tab === 'profile' && <MyProfile onBack={() => setTab('chats')} />}
       </motion.div>
 
-      <nav className={styles.tabBar} aria-label="Разделы">
-        <div className={`${styles.tabs} ${styles.glass}`}>
+      {tab !== 'profile' && <nav className={styles.tabBar} aria-label="Разделы">
+        <LiquidGlass {...glassProps} className={`${styles.tabs} ${styles.liquid}`} padding="3px 4px" style={{ display: 'flex' }}>
           {tabs.map((item) => (
             <button key={item.id} type="button" className={styles.tab} aria-label={item.label}
               aria-current={tab === item.id ? 'page' : undefined}
@@ -99,17 +102,17 @@ function ChatListContent() {
             </button>
           ))}
           <button type="button" className={styles.tab} aria-label="Мой профиль"
-            aria-current={tab === 'profile' ? 'page' : undefined}
             onClick={(event) => open('profile', event.currentTarget.closest('section'))}>
-            {tab === 'profile' && <SlidingPill group="tab-bar" className={styles.pillBg} />}
             <img className={styles.me} src={me} alt="" width={28} height={28} />
           </button>
-        </div>
-        <button type="button" className={`${styles.search} ${styles.glass}`} aria-label="Поиск"
+        </LiquidGlass>
+        <LiquidGlass {...glassProps} className={styles.liquid} padding={0} style={{ flex: 'none', width: 52, height: 52 }}>
+        <button type="button" className={styles.search} aria-label="Поиск"
           onClick={() => setSearching(true)}>
           <img src={searchIcon} alt="" width={24} height={24} />
         </button>
-      </nav>
+        </LiquidGlass>
+      </nav>}
       <StubSheet />
     </section>
   )
