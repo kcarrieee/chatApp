@@ -199,3 +199,8 @@
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, rgb(0 0 0 / .65) 70%, transparent 100%);
   opacity: var(--header-scroll, 0);
 }
+
+/* Mobile has no status bar mockup: same top gap as the side padding. */
+@media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
+  .toolbar { height: 73px; padding-top: 17px; }
+}

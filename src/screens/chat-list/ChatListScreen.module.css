@@ -535,3 +535,18 @@ a.compactRow:hover, button.compactRow:hover { background: var(--hover); }
   filter: invert(42%) sepia(62%) saturate(2400%) hue-rotate(245deg) brightness(95%);
 }
 
+/* Web (phone mockup): the tab bar glass is as dense as the chat composer's.
+   On mobile the lighter liquid glass above stays. */
+@media (min-width: 768px) and ((min-height: 501px) or (pointer: fine)) {
+  .liquid {
+    backdrop-filter: blur(12px) saturate(1.4);
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  }
+  .liquid :global([data-lg-surface]) { background: rgb(255 255 255 / .65); }
+  :global([data-theme='dark']) .liquid :global([data-lg-surface]) { background: rgb(44 44 48 / .62); }
+}
+
+/* Mobile has no status bar mockup: give the header the same top gap as the side padding. */
+@media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
+  .header { padding-top: 16px; }
+}

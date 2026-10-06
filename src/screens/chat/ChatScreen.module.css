@@ -613,3 +613,8 @@
   font: 500 15px/20px var(--sans);
   pointer-events: none;
 }
+
+/* Mobile has no status bar mockup: same top gap as the side padding. */
+@media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
+  .header { height: 70px; padding-top: 16px; }
+}

@@ -247,3 +247,8 @@
   border-radius: inherit;
   background: var(--selected);
 }
+
+/* Mobile has no status bar mockup: same top gap as the side padding. */
+@media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
+  .header { padding-top: 12px; }
+}
