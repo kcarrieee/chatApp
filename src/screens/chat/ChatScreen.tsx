@@ -5,7 +5,6 @@ import { ScreenLink } from '../../navigation/ScreenLink'
 import { readRouteId, routes } from '../../navigation/routes'
 import { chats, contacts, initials, type Chat } from '../chat-list/chats'
 import searchIcon from '../chat-list/assets/search.svg'
-import dotsIcon from '../chat-list/assets/dots.svg'
 import readIcon from '../chat-list/assets/read.svg'
 import sticker from './assets/sticker.png'
 import heartFire from './assets/heart-fire.png'
@@ -258,12 +257,11 @@ function Conversation({ id }: { id: string }) {
             strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M10 2 2 10l8 8" />
           </svg>
-          <span className={styles.mark} aria-label="непрочитанных чатов: 8">8</span>
           <span className={styles.visuallyHidden}>Все чаты</span>
         </ScreenLink>
         {/* Opens the contact profile (Karina's screen). */}
-        <ScreenLink to={routes.profile} id={peer.id} className={styles.contact}>
-          <span className={`${styles.contactAvatar} ${styles.glass}`}>
+        <ScreenLink to={routes.profile} id={peer.id} className={`${styles.contact} ${styles.glass}`}>
+          <span className={styles.contactAvatar}>
             {peer.avatar
               ? <img src={peer.avatar} alt="" />
               : <span className={styles.initials} style={{ background: peer.color }}>{initials(peer.name)}</span>}
@@ -277,7 +275,6 @@ function Conversation({ id }: { id: string }) {
         </ScreenLink>
         <div className={`${styles.actions} ${styles.glass}`}>
           <button type="button" onClick={() => showStub()} aria-label="Поиск по чату"><img src={searchIcon} alt="" width={24} height={24} /></button>
-          <button type="button" onClick={() => showStub()} aria-label="Ещё"><img src={dotsIcon} alt="" width={24} height={24} /></button>
         </div>
       </header>
 

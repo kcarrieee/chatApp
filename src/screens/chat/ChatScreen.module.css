@@ -58,7 +58,6 @@
 :global([data-theme='dark']) .round img,
 :global([data-theme='dark']) .field img { filter: invert(.94); }
 :global([data-theme='dark']) .back svg { stroke: #efeff5; }
-:global([data-theme='dark']) .mark { background: #efeff5; color: #000; }
 :global([data-theme='dark']) .contactStatus { color: rgb(255 255 255 / .6); }
 :global([data-theme='dark']) .out .meta img { filter: brightness(0) invert(1) opacity(.55); }
 /* The play button turns light; its triangle stays cut out to the bubble colour. */
@@ -100,7 +99,8 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  display: flex;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
   align-items: center;
   gap: 8px;
   height: calc(54px + var(--sb));
@@ -123,35 +123,30 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 0 12px 0 14px;
+  width: 44px;
+  justify-content: center;
+  padding: 0;
   text-decoration: none;
 }
-.mark {
-  min-width: 18px;
-  height: 18px;
-  padding: 0 4px;
-  border-radius: 23px;
-  background: #1a1a1a;
-  color: #fff;
-  font-size: 13px;
-  line-height: 18px;
-  text-align: center;
-}
-
 .contact {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-right: auto;
-  color: #fff;
+  gap: 10px;
+  justify-self: center;
+  justify-content: flex-start;
+  width: 200px;
+  max-width: 100%;
+  height: 44px;
+  padding-block: 3px;
+  padding-inline: 4px;
+  color: var(--ink);
   text-decoration: none;
 }
 .contactAvatar {
   flex: none;
-  width: 44px;
-  height: 44px;
-  padding: 3px;
+  width: 38px;
+  height: 38px;
 }
 .contactAvatar img {
   width: 38px;
@@ -169,8 +164,8 @@
   font: 600 15px/1 var(--sans);
 }
 .contactText { min-width: 0; display: flex; flex-direction: column; }
-.contactName { font-size: 15px; line-height: 18px; font-weight: 590; }
-.contactStatus { font-size: 12px; line-height: 14px; font-weight: 590; color: rgb(255 255 255 / .45); }
+.contactName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; line-height: 18px; font-weight: 590; }
+.contactStatus { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; line-height: 14px; font-weight: 590; color: var(--muted-text); }
 
 .actions {
   flex: none;
