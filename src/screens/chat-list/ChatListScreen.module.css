@@ -398,7 +398,7 @@
   padding: 16px 25px 32px;
 }
 @media (max-width: 767px), (max-height: 500px) and (pointer: coarse) {
-  .tabBar { padding: 16px 16px 8px; justify-content: center; }
+  .tabBar { padding: 16px 16px 24px; justify-content: center; }
 }
 /* Leave the scrolling content visible for the glass to refract. */
 .liquid {
