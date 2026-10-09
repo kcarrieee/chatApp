@@ -407,9 +407,12 @@
   backdrop-filter: blur(8px) saturate(1.1);
 }
 .liquid :global([data-lg-surface]) {
-  background: var(--glass-bg);
+  background: rgb(255 255 255 / .8);
   /* Override the library’s inline bevel with the shared rim. */
   box-shadow: var(--glass-rim) !important;
+}
+:global([data-theme='dark']) .liquid :global([data-lg-surface]) {
+  background: rgb(44 44 48 / .82);
 }
 /* Keep the glass material, with quieter reflections and depth. */
 .liquid :global([data-lg-highlight]),

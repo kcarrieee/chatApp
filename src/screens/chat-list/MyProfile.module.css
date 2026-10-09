@@ -10,7 +10,7 @@
   --p-selected: #fff;
   --p-icon-filter: brightness(0) opacity(.85);
   flex: 1;
-  padding: 0 17px 32px;
+  padding: 0 17px 100px;
   color: var(--p-ink);
   background: linear-gradient(#e9dcff, rgb(255 255 255 / 0) 320px), var(--p-bg);
   font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -49,7 +49,7 @@
   align-items: center;
   justify-content: space-between;
 }
-.toolbarActions { display: flex; gap: 17px; }
+.toolbarActions { display: flex; gap: 17px; margin-left: auto; }
 .toolbarButton { width: 29px; height: 36px; display: grid; place-items: center; }
 .toolbarButton img, .action img { width: 28px; height: auto; filter: var(--p-icon-filter); }
 

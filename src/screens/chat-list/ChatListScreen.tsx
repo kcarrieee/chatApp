@@ -90,10 +90,10 @@ function ChatListContent() {
         )}
         {tab === 'contacts' && <ContactsTab />}
         {tab === 'calls' && <CallsTab />}
-        {tab === 'profile' && <MyProfile onBack={() => setTab('chats')} />}
+        {tab === 'profile' && <MyProfile />}
       </motion.div>
 
-      {tab !== 'profile' && <nav className={styles.tabBar} aria-label="Разделы">
+      <nav className={styles.tabBar} aria-label="Разделы">
         <LiquidGlass {...glassProps} className={`${styles.tabs} ${styles.liquid}`} padding="3px 4px" style={{ display: 'flex' }}>
           {tabs.map((item) => (
             <button key={item.id} type="button" className={styles.tab} aria-label={item.label}
@@ -104,7 +104,9 @@ function ChatListContent() {
             </button>
           ))}
           <button type="button" className={styles.tab} aria-label="Мой профиль"
+            aria-current={tab === 'profile' ? 'page' : undefined}
             onClick={(event) => open('profile', event.currentTarget.closest('section'))}>
+            {tab === 'profile' && <SlidingPill group="tab-bar" className={styles.pillBg} />}
             <img className={styles.me} src={me} alt="" width={28} height={28} />
           </button>
         </LiquidGlass>
@@ -114,7 +116,7 @@ function ChatListContent() {
           <img src={searchIcon} alt="" width={24} height={24} />
         </button>
         </LiquidGlass>
-      </nav>}
+      </nav>
       <StubSheet />
     </section>
   )

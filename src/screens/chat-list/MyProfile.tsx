@@ -44,7 +44,7 @@ const EditIcon = () => (
   </svg>
 )
 
-export function MyProfile({ onBack }: { onBack: () => void }) {
+export function MyProfile() {
   const rootRef = useRef<HTMLDivElement>(null)
   useLayoutEffect(() => {
     const root = rootRef.current!
@@ -62,9 +62,6 @@ export function MyProfile({ onBack }: { onBack: () => void }) {
   return (
     <div ref={rootRef} className={styles.profile} style={{ '--profile-bg': `url(${profileAssets}background.svg)` } as CSSProperties}>
       <header className={styles.toolbar}>
-        <button type="button" className={styles.toolbarButton} aria-label="Назад к чатам" onClick={onBack}>
-          <img src={`${profileAssets}back.svg`} alt="" />
-        </button>
         <div className={styles.toolbarActions}>
           <button type="button" className={styles.toolbarButton} aria-label="QR-код" onClick={() => showStub()}>
             <img src={`${profileAssets}qr.svg`} alt="" />
